@@ -18,9 +18,10 @@ namespace CheckersNEA
 
         protected override void Initialize()
         {
-            // TODO: Add your initialization logic here
-
+        
             base.Initialize();
+            CheckersGame checkersGame =  new CheckersGame();
+            checkersGame.IntilizeGame();
         }
 
         protected override void LoadContent()
