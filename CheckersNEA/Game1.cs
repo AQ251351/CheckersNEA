@@ -48,5 +48,6 @@ namespace CheckersNEA
 
             base.Draw(gameTime);
         }
+
     }
 }
