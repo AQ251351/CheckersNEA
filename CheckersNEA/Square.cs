@@ -1,14 +1,29 @@
 ﻿namespace CheckersNEA
 {
+    /************************************************************
+     * Class: Square
+     * 
+     * This class represents a square on the checkers board. 
+     * 
+     ***********************************************************/
+
     public class Square
     {
-        private string Colour { set; get; }
+        private bool isDarkSquare { set; get; }       
 
         public Piece Man { get; set; }
 
-        public Square (string value)
+        /************************************************************
+         * Constructor: Square
+         * 
+         * This constructor initializes the square with its colour.
+         * The Man piece is set to null, indicating that there is no piece on the square initially.
+         * The colour is set where true indicates a dark square and false indicates a light square.
+         ***********************************************************/
+        public Square (bool value)
         {
-            Colour = value;
+            isDarkSquare = value;
+            Man = null;
 
         }
      
