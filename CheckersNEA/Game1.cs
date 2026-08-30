@@ -55,22 +55,20 @@ namespace CheckersNEA
 
             for (int row = 0; row < 8; row++) 
             {
-                for (int column = 0; column < 8; column ++)
+                for (int column = 0; column < CheckersGame.BOARD_DIMENSION; column ++)
                 {
                     Square square = checkersGame.Board[row, column];
+
+                    // if there is a piece in the square 
                     if (square.Man != null )
                     {
                         int x = (row * 60) ;
                         int y = (column * 60);
 
-                        if (square.Man.Colour == "White")
+                        // not dark piece means its white
+                        if (!square.Man.IsDarkPiece)
                         {
-                            Rectangle destination = new Rectangle(
-                            x,
-                            y,
-                            60,
-                            60
-                            );
+                            Rectangle destination = new Rectangle(x,y,60,60);
 
                             _spriteBatch.Draw(_WhitePiece, destination, Color.White);
                             //_spriteBatch.Draw(_WhitePiece, new Vector2(x, y), Color.White);

@@ -63,7 +63,7 @@ namespace CheckersNEA
                 {
                     if ((column + row) % 2 != 0)
                     {
-                        Square square = Board[column, row];
+                        Square square = Board[row, column];
                         square.Man = new Piece(DARK_INDICATOR);
                     }
                     
@@ -77,7 +77,7 @@ namespace CheckersNEA
                 {
                     if ((column + row) % 2 != 0)
                     {
-                        Square square = Board[column, row];
+                        Square square = Board[row, column];
                         square.Man = new Piece(LIGHT_INDICATOR);
                     }
 
