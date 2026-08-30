@@ -9,6 +9,9 @@ namespace CheckersNEA
         private GraphicsDeviceManager _graphics;
         private SpriteBatch _spriteBatch;
 
+        private CheckersGame checkersGame;
+        private Texture2D _WhitePiece;
+
         public Game1()
         {
             _graphics = new GraphicsDeviceManager(this);
@@ -20,7 +23,8 @@ namespace CheckersNEA
         {
         
             base.Initialize();
-            CheckersGame checkersGame =  new CheckersGame();
+
+            checkersGame =  new CheckersGame();
             checkersGame.IntilizeGame();
         }
 
@@ -29,6 +33,7 @@ namespace CheckersNEA
             _spriteBatch = new SpriteBatch(GraphicsDevice);
 
             // TODO: use this.Content to load your game content here
+            _WhitePiece = Content.Load<Texture2D>("White_Checker_Piece");
         }
 
         protected override void Update(GameTime gameTime)
@@ -46,6 +51,36 @@ namespace CheckersNEA
             GraphicsDevice.Clear(Color.CornflowerBlue);
 
             // TODO: Add your drawing code here
+            _spriteBatch.Begin();
+
+            for (int row = 0; row < 8; row++) 
+            {
+                for (int column = 0; column < 8; column ++)
+                {
+                    Square square = checkersGame.Board[row, column];
+                    if (square.Man != null )
+                    {
+                        int x = (row * 60) ;
+                        int y = (column * 60);
+
+                        if (square.Man.Colour == "White")
+                        {
+                            Rectangle destination = new Rectangle(
+                            x,
+                            y,
+                            60,
+                            60
+                            );
+
+                            _spriteBatch.Draw(_WhitePiece, destination, Color.White);
+                            //_spriteBatch.Draw(_WhitePiece, new Vector2(x, y), Color.White);
+                        }
+                    }
+                        
+                }
+            }
+                
+            _spriteBatch.End();
 
             base.Draw(gameTime);
         }

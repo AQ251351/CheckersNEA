@@ -26,7 +26,7 @@ namespace CheckersNEA
             // Creates an 8x8 array to represent the board. Each square is currently null.
             CreateBoard();
             AddPiecesToBoard();
-
+            
         }
         private void AddPiecesToBoard()
         {
@@ -48,7 +48,7 @@ namespace CheckersNEA
                 {
                     if ((column + row) % 2 != 0)
                     {
-                        Square square = Board[column, row];
+                        Square square = Board[row, column];
                         square.Man = new Piece(WHITE_COLOUR);
                     }
 
