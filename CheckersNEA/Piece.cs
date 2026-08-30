@@ -6,22 +6,24 @@ using System.Threading.Tasks;
 
 namespace CheckersNEA
 {
-
+    /***********************************************************
+     * Class: Piece
+     * 
+     * This class represents a piece in the game of checkers. 
+     * It has properties to determine if the piece is a dark piece or a light piece, and if it is a king or not.
+     ***********************************************************/
 
     public class Piece
     {
-        public string Colour { get; set; }
+        public bool IsDarkPiece { get; set; }
 
         public bool IsKing { get; set; }
 
-        public Piece(string colour)
+        public Piece(bool value)
         {
-            Colour = colour;
+            IsDarkPiece = value;
             IsKing = false;
         }
-        public void MakeKing()
-        {
-            IsKing = true;
-        }
+       
     }
 }
