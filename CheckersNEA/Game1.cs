@@ -72,7 +72,11 @@ namespace CheckersNEA
 
                     if (square.IsDarkSquare)
                     {
-                        _spriteBatch.Draw(_texture, new Rectangle(x, y, 60, 60),Color.Black);
+                        _spriteBatch.Draw(_texture, new Rectangle(x, y, 60, 60), Color.Black);
+                    }
+                    else 
+                    {
+                        _spriteBatch.Draw(_texture, new Rectangle(x, y, 60, 60), Color.Red);
                     }
                     // if there is a piece in the square 
                     if (square.Man != null )
