@@ -9,7 +9,7 @@
 
     public class Square
     {
-        private bool isDarkSquare { set; get; }       
+        public bool IsDarkSquare { set; get; }       
 
         public Piece Man { get; set; }
 
@@ -22,7 +22,7 @@
          ***********************************************************/
         public Square (bool value)
         {
-            isDarkSquare = value;
+            IsDarkSquare = value;
             Man = null;
 
         }

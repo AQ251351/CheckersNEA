@@ -9,6 +9,7 @@ namespace CheckersNEA
         private GraphicsDeviceManager _graphics;
         private SpriteBatch _spriteBatch;
 
+        private Texture2D _texture;
         private CheckersGame checkersGame;
         private Texture2D _WhitePiece;
 
@@ -33,6 +34,9 @@ namespace CheckersNEA
             _spriteBatch = new SpriteBatch(GraphicsDevice);
 
             // TODO: use this.Content to load your game content here
+            _texture = new Texture2D(GraphicsDevice,1,1);
+            _texture.SetData(new[] { Color.White });
+
             _WhitePiece = Content.Load<Texture2D>("White_Checker_Piece");
         }
 
@@ -51,20 +55,28 @@ namespace CheckersNEA
             GraphicsDevice.Clear(Color.CornflowerBlue);
 
             // TODO: Add your drawing code here
+            
+            
+            
             _spriteBatch.Begin();
 
             for (int row = 0; row < 8; row++) 
             {
                 for (int column = 0; column < CheckersGame.BOARD_DIMENSION; column ++)
                 {
+                    
+                    int x = (row * 60);
+                    int y = (column * 60);
+
                     Square square = checkersGame.Board[row, column];
 
+                    if (square.IsDarkSquare)
+                    {
+                        _spriteBatch.Draw(_texture, new Rectangle(x, y, 60, 60),Color.Black);
+                    }
                     // if there is a piece in the square 
                     if (square.Man != null )
-                    {
-                        int x = (row * 60) ;
-                        int y = (column * 60);
-
+                    {              
                         // not dark piece means its white
                         if (!square.Man.IsDarkPiece)
                         {
