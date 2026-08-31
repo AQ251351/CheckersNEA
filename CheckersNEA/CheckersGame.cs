@@ -1,9 +1,6 @@
-﻿using System;
-using System.Collections.Generic;
-using System.IO;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+﻿using Microsoft.Xna.Framework;
+using Microsoft.Xna.Framework.Graphics;
+using Microsoft.Xna.Framework.Input;
 
 namespace CheckersNEA
 {
@@ -11,103 +8,136 @@ namespace CheckersNEA
      * Class: CheckersGame
      * 
      * This class represents the game of checkers.
+     * It is derived from the Game class provided by the MonoGame framework.
      ***********************************************************/
-    public class CheckersGame
+    public class CheckersGame : Game
     {
-        public const int BOARD_DIMENSION = 8;
-        public const bool DARK_INDICATOR = true;
-        public const bool LIGHT_INDICATOR = false;
+        private GraphicsDeviceManager _graphics;
+        private SpriteBatch _spriteBatch;
 
-        // property called Board that is a 2D array of Squares. Each square has an associated Piece,
-        // which can be null if there is no piece on that square.
-        
-        public Square[,] Board { get; set; }
+        private Texture2D _texture;
+        private CheckersGameHelper checkersGame;
+        private Texture2D _WhitePiece;
+        private Texture2D _whiteSquare;
+        private Texture2D _blackSquare;
+        private Texture2D _redPiece;
+        private Texture2D _blackPiece;
+        private Texture2D _highlightSquare;
 
-        /************************************************************
+        /*****************************************************
          * Constructor: CheckersGame
          * 
          * Default constructor for the CheckersGame class. 
-         ***********************************************************/
+         * 
+         ********************************************************/
+
         public CheckersGame()
-        { }
-
-        /*
-         * **********************************************************
-         * Method: IntilizeGame
-         * 
-         * This method initializes the game by creating the board and adding pieces to it.
-         * Needs to be called before the game can be played.
-         *************************************************************/
-        public void IntilizeGame()
         {
-            Board = new Square[BOARD_DIMENSION, BOARD_DIMENSION];
-            // Creates an 8x8 array to represent the board. Each square is currently null.
-            CreateBoard();
-            AddPiecesToBoard();
-            
+            _graphics = new GraphicsDeviceManager(this);
+            Content.RootDirectory = "Content";
+            IsMouseVisible = true;
         }
 
-        /************************************************************
-         * Method: AddPiecesToBoard
+        /*****************************************************
+         * Method: Initialize
          * 
-         * This method adds pieces to the board. It places dark pieces on the first three rows and 
-         * light pieces on the last three rows.
-         ***********************************************************/
-          
-        private void AddPiecesToBoard()
+         * Monogame dedicated place for additional configuration and initializations.
+         ********************************************************/
+        protected override void Initialize()
         {
-            // Puts Dark pieces onto the board 
-            for (int column = 0; column < 3; column++)
-            {
-                for (int row = 0; row < BOARD_DIMENSION; row++)
-                {
-                    if ((column + row) % 2 != 0)
-                    {
-                        Square square = Board[row, column];
-                        square.Man = new Piece(DARK_INDICATOR);
-                    }
-                    
-                }
-            }
-
-            // Puts Light pieces onto the board
-            for (int column = 5; column < 8; column++)
-            {
-                for (int row = 0; row < BOARD_DIMENSION; row++)
-                {
-                    if ((column + row) % 2 != 0)
-                    {
-                        Square square = Board[row, column];
-                        square.Man = new Piece(LIGHT_INDICATOR);
-                    }
-
-                }
-            }
-        }
-
-        /************************************************************
-         * Method: CreateBoard
-         * 
-         * This method sets up the board by assigning the colour to each square.
-         ***********************************************************/
-        private void CreateBoard()
-        {
-            //Sets up the board squares to be black or white,
-            for (int column = 0; column < BOARD_DIMENSION; column ++)
-            {
-                for (int row = 0; row < BOARD_DIMENSION; row++) 
-                {
-                    if ((column + row) % 2 != 0) 
-                    {
-                        Board[column, row] = new Square(DARK_INDICATOR);
-                    }
-                    else
-                    {
-                        Board[column, row] = new Square(LIGHT_INDICATOR);
-                    }
-                }
-            }          
-        }
         
+            base.Initialize();
+
+            checkersGame =  new CheckersGameHelper();           
+        }
+
+        /*****************************************************
+         * Method: LoadContent
+         * 
+         * The place for asset management. 
+         * Here you can load textures, and other game assets
+         ********************************************************/
+        protected override void LoadContent()
+        {
+            _spriteBatch = new SpriteBatch(GraphicsDevice);
+
+            // TODO: use this.Content to load your game content here
+            _texture = new Texture2D(GraphicsDevice,1,1);
+            _texture.SetData(new[] { Color.White });
+
+            _WhitePiece = Content.Load<Texture2D>("White_Checker_Piece");
+        }
+
+        /*****************************************************
+         * Method: Update
+         * 
+         * This method is called every frame and is used to update the game state.
+         * It handles input and game logic within monogame's game loop
+         ********************************************************/
+        protected override void Update(GameTime gameTime)
+        {
+            if (GamePad.GetState(PlayerIndex.One).Buttons.Back == ButtonState.Pressed || Keyboard.GetState().IsKeyDown(Keys.Escape))
+                Exit();
+
+            // TODO: Add your update logic here
+
+            base.Update(gameTime);
+        }
+
+        /*****************************************************
+         * Method: Draw
+         * 
+         * This method is called every frame and is used to draw the game state.
+         * It handles rendering within monogame's game loop
+         ********************************************************/
+        protected override void Draw(GameTime gameTime)
+        {
+            GraphicsDevice.Clear(Color.CornflowerBlue);
+
+            // TODO: Add your drawing code here
+            
+            
+            
+            _spriteBatch.Begin();
+
+            for (int row = 0; row < CheckersGameHelper.BOARD_DIMENSION; row++) 
+            {
+                for (int column = 0; column < CheckersGameHelper.BOARD_DIMENSION; column ++)
+                {
+                    
+                    int x = (row * 60);
+                    int y = (column * 60);
+
+                    Square square = checkersGame.Board[row, column];
+
+                    if (square.IsDarkSquare)
+                    {
+                        _spriteBatch.Draw(_texture, new Rectangle(x, y, 60, 60), Color.Black);
+                    }
+                    else 
+                    {
+                        _spriteBatch.Draw(_texture, new Rectangle(x, y, 60, 60), Color.Red);
+                    }
+                    // if there is a piece in the square 
+                    if (square.Man != null )
+                    {              
+                        // not dark piece means its white
+                        if (!square.Man.IsDarkPiece)
+                        {
+                            Rectangle destination = new Rectangle(x,y,60,60);
+
+                            _spriteBatch.Draw(_WhitePiece, destination, Color.White);
+                            //_spriteBatch.Draw(_WhitePiece, new Vector2(x, y), Color.White);
+                        }
+                    }
+                        
+                }
+            }
+                
+            _spriteBatch.End();
+
+            base.Draw(gameTime);
+        }
+
     }
 }

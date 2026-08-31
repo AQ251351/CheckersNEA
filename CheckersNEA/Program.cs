@@ -1,2 +1,2 @@
-﻿using var game = new CheckersNEA.Game1();
+﻿using var game = new CheckersNEA.CheckersGame();
 game.Run();
