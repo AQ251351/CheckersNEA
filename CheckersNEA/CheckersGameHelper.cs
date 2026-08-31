@@ -7,9 +7,12 @@
      ***********************************************************/
     public class CheckersGameHelper
     {
+        public const int SQUARE_SIZE = 60;
         public const int BOARD_DIMENSION = 8;
         public const bool DARK_INDICATOR = true;
         public const bool LIGHT_INDICATOR = false;
+
+        
 
         // property called Board that is a 2D array of Squares. Each square has an associated Piece,
         // which can be null if there is no piece on that square.

@@ -1,6 +1,7 @@
 ﻿using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 using Microsoft.Xna.Framework.Input;
+using System;
 
 namespace CheckersNEA
 {
@@ -17,11 +18,11 @@ namespace CheckersNEA
 
         private Texture2D _texture;
         private CheckersGameHelper checkersGame;
-        private Texture2D _WhitePiece;
-        private Texture2D _whiteSquare;
-        private Texture2D _blackSquare;
-        private Texture2D _redPiece;
-        private Texture2D _blackPiece;
+
+        private Texture2D _lightSquare;
+        private Texture2D _darkSquare;
+        private Texture2D _lightPiece;
+        private Texture2D _darkPiece;
         private Texture2D _highlightSquare;
 
         /*****************************************************
@@ -65,7 +66,9 @@ namespace CheckersNEA
             _texture = new Texture2D(GraphicsDevice,1,1);
             _texture.SetData(new[] { Color.White });
 
-            _WhitePiece = Content.Load<Texture2D>("White_Checker_Piece");
+            _lightPiece = Content.Load<Texture2D>("LightPiece");
+            _darkPiece = Content.Load<Texture2D>("DarkPiece");
+
         }
 
         /*****************************************************
@@ -76,12 +79,26 @@ namespace CheckersNEA
          ********************************************************/
         protected override void Update(GameTime gameTime)
         {
-            if (GamePad.GetState(PlayerIndex.One).Buttons.Back == ButtonState.Pressed || Keyboard.GetState().IsKeyDown(Keys.Escape))
+            if (GamePad.GetState(PlayerIndex.One).Buttons.Back == ButtonState.Pressed ||
+                Keyboard.GetState().IsKeyDown(Keys.Escape))
+            {
                 Exit();
+            }
 
-            // TODO: Add your update logic here
-
+            handleMouseEvent(gameTime);
+            
             base.Update(gameTime);
+        }
+
+        private void handleMouseEvent(GameTime gameTime)
+        {
+            MouseState mouse = Mouse.GetState();
+
+            if (mouse.LeftButton == ButtonState.Pressed)
+            {
+                int X_Coordinate = mouse.X / CheckersGameHelper.SQUARE_SIZE;
+                int Y_Coordinate = mouse.Y / CheckersGameHelper.SQUARE_SIZE;
+            }
         }
 
         /*****************************************************
@@ -105,18 +122,18 @@ namespace CheckersNEA
                 for (int column = 0; column < CheckersGameHelper.BOARD_DIMENSION; column ++)
                 {
                     
-                    int x = (row * 60);
-                    int y = (column * 60);
+                    int x = (row * CheckersGameHelper.SQUARE_SIZE);
+                    int y = (column * CheckersGameHelper.SQUARE_SIZE);
 
                     Square square = checkersGame.Board[row, column];
 
                     if (square.IsDarkSquare)
                     {
-                        _spriteBatch.Draw(_texture, new Rectangle(x, y, 60, 60), Color.Black);
+                        _spriteBatch.Draw(_texture, new Rectangle(x, y, CheckersGameHelper.SQUARE_SIZE, CheckersGameHelper.SQUARE_SIZE), Color.Black);
                     }
                     else 
                     {
-                        _spriteBatch.Draw(_texture, new Rectangle(x, y, 60, 60), Color.Red);
+                        _spriteBatch.Draw(_texture, new Rectangle(x, y, CheckersGameHelper.SQUARE_SIZE, CheckersGameHelper.SQUARE_SIZE), Color.Red);
                     }
                     // if there is a piece in the square 
                     if (square.Man != null )
@@ -124,10 +141,16 @@ namespace CheckersNEA
                         // not dark piece means its white
                         if (!square.Man.IsDarkPiece)
                         {
-                            Rectangle destination = new Rectangle(x,y,60,60);
+                            Rectangle destination = new Rectangle(x,y,CheckersGameHelper.SQUARE_SIZE,CheckersGameHelper.SQUARE_SIZE);
 
-                            _spriteBatch.Draw(_WhitePiece, destination, Color.White);
+                            _spriteBatch.Draw(_lightPiece, destination, Color.White);
                             //_spriteBatch.Draw(_WhitePiece, new Vector2(x, y), Color.White);
+                        }
+                        else
+                        {
+                            Rectangle destination = new Rectangle(x, y, CheckersGameHelper.SQUARE_SIZE, CheckersGameHelper.SQUARE_SIZE);
+
+                            _spriteBatch.Draw(_darkPiece, destination, Color.White);
                         }
                     }
                         
