@@ -9,7 +9,12 @@
 
     public class Square
     {
-        public bool IsDarkSquare { set; get; }       
+        public enum SquareColour
+        { 
+            Black, Yellow, Red, 
+        }
+        public SquareColour ColourOfSquare { set; get; }
+          
 
         public Piece Man { get; set; }
 
@@ -20,9 +25,9 @@
          * The Man piece is set to null, indicating that there is no piece on the square initially.
          * The colour is set where true indicates a dark square and false indicates a light square.
          ***********************************************************/
-        public Square (bool value)
+        public Square (SquareColour c)
         {
-            IsDarkSquare = value;
+            ColourOfSquare = c;
             Man = null;
 
         }

@@ -1,4 +1,6 @@
-﻿namespace CheckersNEA
+﻿using static CheckersNEA.Square;
+
+namespace CheckersNEA
 {
     /************************************************************
      * Class: CheckersGame
@@ -17,7 +19,7 @@
         // property called Board that is a 2D array of Squares. Each square has an associated Piece,
         // which can be null if there is no piece on that square.
         
-        public Square[,] Board { get; set; }
+        public static Square[,] Board { get; set; }
 
         /************************************************************
          * Constructor: CheckersGame
@@ -97,11 +99,13 @@
                 {
                     if ((column + row) % 2 != 0) 
                     {
-                        Board[column, row] = new Square(DARK_INDICATOR);
+                        SquareColour colour = SquareColour.Black;
+                        Board[column, row] = new Square(colour);
                     }
                     else
                     {
-                        Board[column, row] = new Square(LIGHT_INDICATOR);
+                        SquareColour colour = SquareColour.Red;
+                        Board[column, row] = new Square(colour);
                     }
                 }
             }          

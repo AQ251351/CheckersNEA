@@ -2,6 +2,7 @@
 using Microsoft.Xna.Framework.Graphics;
 using Microsoft.Xna.Framework.Input;
 using System;
+using static CheckersNEA.Square;
 
 namespace CheckersNEA
 {
@@ -19,6 +20,7 @@ namespace CheckersNEA
         private Texture2D _texture;
         private CheckersGameHelper checkersGame;
 
+        private Input_Handler handleinput;
         private Texture2D _lightSquare;
         private Texture2D _darkSquare;
         private Texture2D _lightPiece;
@@ -85,21 +87,16 @@ namespace CheckersNEA
                 Exit();
             }
 
-            handleMouseEvent(gameTime);
-            
-            base.Update(gameTime);
-        }
-
-        private void handleMouseEvent(GameTime gameTime)
-        {
             MouseState mouse = Mouse.GetState();
 
             if (mouse.LeftButton == ButtonState.Pressed)
             {
-                int X_Coordinate = mouse.X / CheckersGameHelper.SQUARE_SIZE;
-                int Y_Coordinate = mouse.Y / CheckersGameHelper.SQUARE_SIZE;
+                handleinput = new Input_Handler(mouse, mouse.X,mouse.Y);
             }
+            base.Update(gameTime);
         }
+
+        
 
         /*****************************************************
          * Method: Draw
@@ -125,15 +122,20 @@ namespace CheckersNEA
                     int x = (row * CheckersGameHelper.SQUARE_SIZE);
                     int y = (column * CheckersGameHelper.SQUARE_SIZE);
 
-                    Square square = checkersGame.Board[row, column];
-
-                    if (square.IsDarkSquare)
+                    Square square = CheckersGameHelper.Board[row, column];
+                    
+                    if (square.ColourOfSquare == SquareColour.Black )
                     {
                         _spriteBatch.Draw(_texture, new Rectangle(x, y, CheckersGameHelper.SQUARE_SIZE, CheckersGameHelper.SQUARE_SIZE), Color.Black);
                     }
-                    else 
+                    else if (square.ColourOfSquare == SquareColour.Red)
                     {
                         _spriteBatch.Draw(_texture, new Rectangle(x, y, CheckersGameHelper.SQUARE_SIZE, CheckersGameHelper.SQUARE_SIZE), Color.Red);
+                        
+                    }
+                    else if (square.ColourOfSquare == SquareColour.Yellow)
+                    {
+                        _spriteBatch.Draw(_texture, new Rectangle(x, y, CheckersGameHelper.SQUARE_SIZE, CheckersGameHelper.SQUARE_SIZE), Color.Yellow);
                     }
                     // if there is a piece in the square 
                     if (square.Man != null )
