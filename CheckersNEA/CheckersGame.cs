@@ -20,7 +20,7 @@ namespace CheckersNEA
         private Texture2D _texture;
         private CheckersGameHelper checkersGame;
 
-        private Input_Handler handleinput;
+        private InputHandler handleinput;
         private Texture2D _lightSquare;
         private Texture2D _darkSquare;
         private Texture2D _lightPiece;
@@ -87,11 +87,17 @@ namespace CheckersNEA
                 Exit();
             }
 
+            // Handle mouse input
             MouseState mouse = Mouse.GetState();
 
             if (mouse.LeftButton == ButtonState.Pressed)
             {
-                handleinput = new Input_Handler(mouse, mouse.X,mouse.Y);
+                handleinput = new InputHandler();
+                handleinput.HandleMouseEvent(mouse);
+            }
+            else if (mouse.LeftButton == ButtonState.Released)
+            {
+
             }
             base.Update(gameTime);
         }
