@@ -20,7 +20,7 @@ namespace CheckersNEA
 
 
     {
-
+        private Piece _selectedPiece = null;
         /************************************************************
          * Constructor: InputHandler
          * 
@@ -39,6 +39,7 @@ namespace CheckersNEA
          ***********************************************************/
         public void HandleMouseEvent(MouseState mouse)
         {
+            
 
 
             int X_Coordinate = mouse.X / CheckersGameHelper.SQUARE_SIZE;
@@ -46,17 +47,25 @@ namespace CheckersNEA
 
             Square square = CheckersGameHelper.Board[X_Coordinate, Y_Coordinate];
             
-            if (mouse.LeftButton == ButtonState.Pressed)
+            if (mouse.LeftButton == ButtonState.Pressed )
             {
-                // TODO we probably want to highlight the peice here and not the square, but for now we will highlight the square
+                
+                // TODO we probably want to highlight the piece here and not the square, but for now we will highlight the square
                 if (square.Man != null)
-                {
-                    square.ColourOfSquare = SquareColour.Yellow;
-                    CheckersGameHelper.Board[X_Coordinate, Y_Coordinate] = square;
-                }
+                    {
+                        square.ColourOfSquare = SquareColour.Yellow;
+                        CheckersGameHelper.Board[X_Coordinate, Y_Coordinate] = square;
+                    }
+                Square clickedSquare = CheckersGameHelper.Board[X_Coordinate, Y_Coordinate];
+                
             }
-            else if (mouse.LeftButton == ButtonState.Released) {
+            else if (mouse.LeftButton == ButtonState.Released) 
+            {
+                int targetX = mouse.X / CheckersGameHelper.SQUARE_SIZE;
+                int targetY = mouse.Y / CheckersGameHelper.SQUARE_SIZE;
                 // Add code here to handle the case when the left mouse button is released.
+                
+                CheckersGameHelper.Board[targetX, targetY].Man = CheckersGameHelper.Board[mouse.X, mouse.Y].Man;
             }
 
 

@@ -1,4 +1,5 @@
-﻿using static CheckersNEA.Square;
+﻿using System.Collections.Generic;
+using static CheckersNEA.Square;
 
 namespace CheckersNEA
 {
@@ -41,6 +42,7 @@ namespace CheckersNEA
         public void InitializeGame()
         {
             Board = new Square[BOARD_DIMENSION, BOARD_DIMENSION];
+            
             // Creates an 8x8 array to represent the board. Each square is currently null.
             CreateBoard();
             AddPiecesToBoard();

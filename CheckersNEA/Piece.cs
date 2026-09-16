@@ -1,6 +1,8 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Drawing;
 using System.Linq;
+using System.Numerics;
 using System.Text;
 using System.Threading.Tasks;
 
@@ -15,6 +17,8 @@ namespace CheckersNEA
 
     public class Piece
     {
+        
+        
         public bool IsDarkPiece { get; set; }
 
         public bool IsKing { get; set; }
@@ -23,7 +27,11 @@ namespace CheckersNEA
         {
             IsDarkPiece = value;
             IsKing = false;
+            
         }
-       
+
+        public Piece()
+        {
+        }
     }
 }
