@@ -102,7 +102,7 @@ namespace CheckersNEA
 
 
         }
-        //Method for collecting information about the square the piece will move too and then moving it
+        //Method for collecting information about the square the piece will move too and then moving it.
         static void ChoosePieceMove(MouseState mouse, int currentX, int currentY)
         {
            
