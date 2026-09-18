@@ -2,6 +2,7 @@
 using Microsoft.Xna.Framework.Graphics;
 using Microsoft.Xna.Framework.Input;
 using System;
+using System.ComponentModel.DataAnnotations;
 using static CheckersNEA.Square;
 
 namespace CheckersNEA
@@ -27,6 +28,9 @@ namespace CheckersNEA
         private Texture2D _darkPiece;
         private Texture2D _highlightSquare;
 
+        
+
+
         /*****************************************************
          * Constructor: CheckersGame
          * 
@@ -49,9 +53,11 @@ namespace CheckersNEA
         protected override void Initialize()
         {
         
-            base.Initialize();
+            
 
-            checkersGame =  new CheckersGameHelper();           
+            checkersGame =  new CheckersGameHelper();
+            handleinput = new InputHandler();
+            base.Initialize();
         }
 
         /*****************************************************
@@ -90,16 +96,17 @@ namespace CheckersNEA
             // Handle mouse input
             MouseState mouse = Mouse.GetState();
 
-            if (mouse.LeftButton == ButtonState.Pressed)
+            // as of now code only runs when the button is pressed meaning later methods are never ran. needs to be fixed
+            if (mouse.LeftButton == ButtonState.Pressed  )
             {
-                handleinput = new InputHandler();
+               
                 handleinput.HandleMouseEvent(mouse);
+                
             }
-            else if (mouse.LeftButton == ButtonState.Released)
-            {
 
-            }
+
             base.Update(gameTime);
+
         }
 
         
