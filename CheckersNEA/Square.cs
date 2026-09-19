@@ -11,7 +11,7 @@
     {
         public enum SquareColour
         { 
-            Black, Yellow, Red, 
+            Black, Yellow, Red
         }
         public SquareColour ColourOfSquare { set; get; }
           

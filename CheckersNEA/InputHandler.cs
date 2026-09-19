@@ -22,7 +22,8 @@ namespace CheckersNEA
     {
         int currentX = 0;
         int currentY = 0;
-        bool PieceSelected = false;
+        private Square SquareSelected = null;
+        private bool PlayerOneTurn;
         /************************************************************
          * Constructor: InputHandler
          * 
@@ -30,102 +31,101 @@ namespace CheckersNEA
          * It sets up the necessary configurations for handling user input.
          ***********************************************************/
         public InputHandler()
-        { }
-
-        /************************************************************
-         * Method: handleMouseEvent
-         * 
-         * This method processes mouse events. It calculates the coordinates of the square that was clicked
-         * and carries out the necessary actions based on the state of the square and what 
-         * mouse event occurred. 
-         ***********************************************************/
-        public void HandleMouseEvent(MouseState mouse)
         {
-
-
-            // divide by scale factor of the square to get the cooresponding array position
-            int X_Coordinate = mouse.X / CheckersGameHelper.SQUARE_SIZE;
-            int Y_Coordinate = mouse.Y / CheckersGameHelper.SQUARE_SIZE;
-
-            Square square = CheckersGameHelper.Board[X_Coordinate, Y_Coordinate];
-
-            //Runs when button is pressed and there is not a piece already selected 
-            if (mouse.LeftButton == ButtonState.Pressed && PieceSelected == false)
-            {
-
-                // TODO we probably want to highlight the piece here and not the square, but for now we will highlight the square
-                if (square.Man != null)
-                {
-                    //highlights square
-                    square.ColourOfSquare = SquareColour.Yellow;
-                    CheckersGameHelper.Board[X_Coordinate, Y_Coordinate] = square;
-                    Square clickedSquare = CheckersGameHelper.Board[X_Coordinate, Y_Coordinate];
-                }
-                
-
-            }
-            
-            // runs when the button is let go off or if a piece has been selected
-            else if (mouse.LeftButton == ButtonState.Released || PieceSelected == true)
-            {
-                // code that was used previously not relevant right now
-                //int targetX = mouse.X / CheckersGameHelper.SQUARE_SIZE;
-                //int targetY = mouse.Y / CheckersGameHelper.SQUARE_SIZE;
-                //CheckersGameHelper.Board[targetX, targetY].Man = CheckersGameHelper.Board[mouse.X, mouse.Y].Man;
-
-
-                // Add code here to handle the case when the left mouse button is released.
-
-                //stored the (x,y) value of the square selected
-                if (PieceSelected == false)
-                {
-                    currentX = mouse.X / CheckersGameHelper.SQUARE_SIZE;
-                    currentY = mouse.Y / CheckersGameHelper.SQUARE_SIZE;
-                }
-
-
-
-                if (currentX == X_Coordinate && currentY == Y_Coordinate)
-                {
-                    // makes sure the (x,y) value is not constantly overwritten
-                    PieceSelected = true;
-
-                }
-                
-                ChoosePieceMove(mouse, currentX, currentY);
-            }
-
-            else 
-            {
-                return ;
-            }
-
-
+            // CheckersGame is initialized and ready to play. Player one starts the game. He will be the dark pieces.
+            // Player two will be the light pieces.
+            PlayerOneTurn = true;
         }
-        //Method for collecting information about the square the piece will move too and then moving it.
-        static void ChoosePieceMove(MouseState mouse, int currentX, int currentY)
+
+            /************************************************************
+             * Method: handleMouseEvent
+             * 
+             * This method processes mouse events. It calculates the coordinates of the square that was clicked
+             * and carries out the necessary actions based on the state of the square and what 
+             * mouse event occurred. 
+             ***********************************************************/
+        public void HandleMouseEvent(MouseState mouse)
         {
            
-            if (mouse.LeftButton == ButtonState.Pressed )
+
+            // divide by scale factor of the square to get the cooresponding array position
+            int X_Coordinate = mouse.X / BoardContainer.SQUARE_SIZE;
+            int Y_Coordinate = mouse.Y / BoardContainer.SQUARE_SIZE;
+
+            Square currentSquare = BoardContainer.Board[X_Coordinate, Y_Coordinate];
+
+            //Runs when button is pressed and there is not a piece already selected 
+            if (mouse.LeftButton == ButtonState.Pressed)
             {
+                if (SquareSelected == null)
+                {
+                    // TODO we probably want to highlight the piece here and not the square, but for now we will highlight the square
+                    if (currentSquare.Man != null)
+                    {
+                        if ((PlayerOneTurn && currentSquare.Man.IsDarkPiece) ||
+                            (!PlayerOneTurn && !currentSquare.Man.IsDarkPiece))
+                        {
+                            //highlights square
+                            currentSquare.ColourOfSquare = SquareColour.Yellow;
+                            BoardContainer.Board[X_Coordinate, Y_Coordinate] = currentSquare;
+                            SquareSelected = currentSquare;
 
-                int NewX = mouse.X/ CheckersGameHelper.SQUARE_SIZE;
-                int NewY = mouse.Y/ CheckersGameHelper.SQUARE_SIZE;
+                            // Switch turns after a piece is selected
+                            if (PlayerOneTurn)
+                            {
+                                PlayerOneTurn = false;
+                            }
+                            else
+                            {
+                                PlayerOneTurn = true;
+                            }
+                        }
+                    }
+                }
+                else
+                {
+                    //if a piece is already selected, we want to move it to the new square
+                    //TODO: we will need to add some logic here to check if the move is valid before moving the piece
 
-                Square NewSquare = CheckersGameHelper.Board[NewX, NewY];
+                    ///CheckerLogicManager.Instance.....
+
+                    ChoosePieceMove(mouse, currentSquare);
+                }
+            }             
+
+        }
+        /************************************************************
+         * Method: ChoosePieceMove
+         * 
+         * This method is responsible for moving a selected piece to a new square.
+         * It checks if the new square is valid for the move and updates the game state accordingly.
+         ***********************************************************/
+        void ChoosePieceMove(MouseState mouse, Square newSquare)
+        {
+                      
+
+            int NewX = mouse.X/ BoardContainer.SQUARE_SIZE;
+            int NewY = mouse.Y/ BoardContainer.SQUARE_SIZE;
+               
 
                
-                if (NewSquare.Man == null && NewSquare.ColourOfSquare == SquareColour.Black)
+            if (newSquare.Man == null && newSquare.ColourOfSquare == SquareColour.Black)
+            {
+                //as soon as the button is pressed the piece should be moved from the old position to the new position 
+                BoardContainer.Board[NewX, NewY] = newSquare;
+                BoardContainer.Board[NewX, NewY].Man =  SquareSelected.Man;
+
+                // Now move piece from the old square.
+                SquareSelected.Man = null;
+                
+                // Finally, we want to change the colour of the previous square back to black if it was yellow
+                if (SquareSelected.ColourOfSquare == SquareColour.Yellow)
                 {
-                    //as soon as the button is pressed the piece should be moved from the old position to the new position 
-                    CheckersGameHelper.Board[NewX, NewY] = NewSquare;
-                    CheckersGameHelper.Board[NewX, NewY].Man = CheckersGameHelper.Board[currentX,currentY].Man;
+                    SquareSelected.ColourOfSquare = SquareColour.Black;
                 }
+                SquareSelected = null;
             }
-            return;
+            
         }
     }
 }
-// want to be able to move a piece
-// do this by recoding the orginal position and the position it will be moved too
-// Then rewrite the piece into that postion

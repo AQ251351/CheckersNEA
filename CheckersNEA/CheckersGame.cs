@@ -19,7 +19,7 @@ namespace CheckersNEA
         private SpriteBatch _spriteBatch;
 
         private Texture2D _texture;
-        private CheckersGameHelper checkersGame;
+        private BoardContainer checkersGame;
 
         private InputHandler handleinput;
         private Texture2D _lightSquare;
@@ -27,8 +27,9 @@ namespace CheckersNEA
         private Texture2D _lightPiece;
         private Texture2D _darkPiece;
         private Texture2D _highlightSquare;
+       
 
-        
+
 
 
         /*****************************************************
@@ -55,8 +56,11 @@ namespace CheckersNEA
         
             
 
-            checkersGame =  new CheckersGameHelper();
+            checkersGame =  new BoardContainer();
             handleinput = new InputHandler();
+
+            
+           
             base.Initialize();
         }
 
@@ -127,28 +131,28 @@ namespace CheckersNEA
             
             _spriteBatch.Begin();
 
-            for (int row = 0; row < CheckersGameHelper.BOARD_DIMENSION; row++) 
+            for (int row = 0; row < BoardContainer.BOARD_DIMENSION; row++) 
             {
-                for (int column = 0; column < CheckersGameHelper.BOARD_DIMENSION; column ++)
+                for (int column = 0; column < BoardContainer.BOARD_DIMENSION; column ++)
                 {
                     
-                    int x = (row * CheckersGameHelper.SQUARE_SIZE);
-                    int y = (column * CheckersGameHelper.SQUARE_SIZE);
+                    int x = (row * BoardContainer.SQUARE_SIZE);
+                    int y = (column * BoardContainer.SQUARE_SIZE);
 
-                    Square square = CheckersGameHelper.Board[row, column];
+                    Square square = BoardContainer.Board[row, column];
                     
                     if (square.ColourOfSquare == SquareColour.Black )
                     {
-                        _spriteBatch.Draw(_texture, new Rectangle(x, y, CheckersGameHelper.SQUARE_SIZE, CheckersGameHelper.SQUARE_SIZE), Color.Black);
+                        _spriteBatch.Draw(_texture, new Rectangle(x, y, BoardContainer.SQUARE_SIZE, BoardContainer.SQUARE_SIZE), Color.Black);
                     }
                     else if (square.ColourOfSquare == SquareColour.Red)
                     {
-                        _spriteBatch.Draw(_texture, new Rectangle(x, y, CheckersGameHelper.SQUARE_SIZE, CheckersGameHelper.SQUARE_SIZE), Color.Red);
+                        _spriteBatch.Draw(_texture, new Rectangle(x, y, BoardContainer.SQUARE_SIZE, BoardContainer.SQUARE_SIZE), Color.Red);
                         
                     }
                     else if (square.ColourOfSquare == SquareColour.Yellow)
                     {
-                        _spriteBatch.Draw(_texture, new Rectangle(x, y, CheckersGameHelper.SQUARE_SIZE, CheckersGameHelper.SQUARE_SIZE), Color.Yellow);
+                        _spriteBatch.Draw(_texture, new Rectangle(x, y, BoardContainer.SQUARE_SIZE, BoardContainer.SQUARE_SIZE), Color.Yellow);
                     }
                     // if there is a piece in the square 
                     if (square.Man != null )
@@ -156,14 +160,14 @@ namespace CheckersNEA
                         // not dark piece means its white
                         if (!square.Man.IsDarkPiece)
                         {
-                            Rectangle destination = new Rectangle(x,y,CheckersGameHelper.SQUARE_SIZE,CheckersGameHelper.SQUARE_SIZE);
+                            Rectangle destination = new Rectangle(x,y,BoardContainer.SQUARE_SIZE,BoardContainer.SQUARE_SIZE);
 
                             _spriteBatch.Draw(_lightPiece, destination, Color.White);
                             //_spriteBatch.Draw(_WhitePiece, new Vector2(x, y), Color.White);
                         }
                         else
                         {
-                            Rectangle destination = new Rectangle(x, y, CheckersGameHelper.SQUARE_SIZE, CheckersGameHelper.SQUARE_SIZE);
+                            Rectangle destination = new Rectangle(x, y, BoardContainer.SQUARE_SIZE, BoardContainer.SQUARE_SIZE);
 
                             _spriteBatch.Draw(_darkPiece, destination, Color.White);
                         }

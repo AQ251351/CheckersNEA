@@ -4,11 +4,12 @@ using static CheckersNEA.Square;
 namespace CheckersNEA
 {
     /************************************************************
-     * Class: CheckersGame
+     * Class: BoardContainer
      * 
-     * This class represents the game of checkers.
+     * This class represents the checkers board game. It has a 2 dimensional
+     * array of squares. Each square may or may not hold a piece.
      ***********************************************************/
-    public class CheckersGameHelper
+    public class BoardContainer
     {
         public const int SQUARE_SIZE = 60;
         public const int BOARD_DIMENSION = 8;
@@ -23,11 +24,11 @@ namespace CheckersNEA
         public static Square[,] Board { get; set; }
 
         /************************************************************
-         * Constructor: CheckersGame
+         * Constructor: BoardContainer
          * 
-         * Default constructor for the CheckersGame class. 
+         * Default constructor for the BoardContainer class. 
          ***********************************************************/
-        public CheckersGameHelper()
+        public BoardContainer()
         {
             InitializeGame();
         }
