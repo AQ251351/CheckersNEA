@@ -18,7 +18,7 @@ namespace CheckersNEA
     {
         private static CheckerLogicManager instance = null;
 
-        private CheckerLogicManager ()
+        private CheckerLogicManager()
         {
         }
 
@@ -32,6 +32,12 @@ namespace CheckersNEA
                 }
                 return instance;
             }
+        }       
+
+        internal bool CheckIfMoveValid(Square[,] board, Square currentSquare, Square targetSquare)
+        {
+            //TODO Implement logic to check if the move is valid based on the rules of checkers.
+            return true;          
         }
     }   
 }
