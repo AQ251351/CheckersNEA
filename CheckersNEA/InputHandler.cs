@@ -89,8 +89,7 @@ namespace CheckersNEA
                 {
                     //if a piece is already selected, we want to move it to the new square
                     //TODO: we will need to add some logic here to check if the move is valid before moving the piece
-                    int NewX = mouse.X / BoardContainer.SQUARE_SIZE;
-                    int NewY = mouse.Y / BoardContainer.SQUARE_SIZE;
+                    
                     if (CheckerLogicManager.Instance.CheckIfMoveValid(BoardContainer.Board, SquareSelected, currentSquare))
                     {
                         ChoosePieceMove(mouse, currentSquare);
@@ -109,15 +108,12 @@ namespace CheckersNEA
         {
                       
 
-            int NewX = mouse.X/ BoardContainer.SQUARE_SIZE;
-            int NewY = mouse.Y/ BoardContainer.SQUARE_SIZE;
-               
-
                
             if (newSquare.Man == null && newSquare.ColourOfSquare == SquareColour.Black)
             {
-                //as soon as the button is pressed the piece should be moved from the old position to the new position               
-                BoardContainer.Board[NewX, NewY].Man =  SquareSelected.Man;
+                //as soon as the button is pressed the piece should be moved from the old position to the new position
+                
+                BoardContainer.Board[newSquare.column, newSquare.row].Man =  SquareSelected.Man;
 
                 // Now move piece from the old square.
                 SquareSelected.Man = null;

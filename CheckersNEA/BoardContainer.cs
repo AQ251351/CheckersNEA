@@ -103,12 +103,12 @@ namespace CheckersNEA
                     if ((column + row) % 2 != 0) 
                     {
                         SquareColour colour = SquareColour.Black;
-                        Board[column, row] = new Square(colour);
+                        Board[column, row] = new Square(colour, column, row);
                     }
                     else
                     {
                         SquareColour colour = SquareColour.Red;
-                        Board[column, row] = new Square(colour);
+                        Board[column, row] = new Square(colour, column, row);
                     }
                 }
             }          

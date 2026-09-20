@@ -14,8 +14,9 @@
             Black, Yellow, Red
         }
         public SquareColour ColourOfSquare { set; get; }
-          
-
+        // each square will hold its own x and y postiton within the array. Square position will never change in the board, so we can make these properties read-only.
+        public int column { get; }
+        public int row { get; }
         public Piece Man { get; set; }
 
         /************************************************************
@@ -25,11 +26,12 @@
          * The Man piece is set to null, indicating that there is no piece on the square initially.
          * The colour is set where true indicates a dark square and false indicates a light square.
          ***********************************************************/
-        public Square (SquareColour c)
+        public Square (SquareColour c, int x, int y)
         {
             ColourOfSquare = c;
             Man = null;
-
+            column = x;
+            row = y;
         }
         
 
