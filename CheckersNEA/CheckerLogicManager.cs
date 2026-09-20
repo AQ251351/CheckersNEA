@@ -54,30 +54,17 @@ namespace CheckersNEA
             else
             {
                 
-                    if (SelectedSquare.Man.IsDarkPiece)
-                    {
-                        //dark pieces will only be able to move down the board, so the target square y value must be more than the selected square y value.
-                        if (targetSquare.row > SelectedSquare.row)
-                        {
-                            return true;
-                        }
-                        else
-                        {
-                            return false;
-                        }
-                    }
-                    if (!SelectedSquare.Man.IsDarkPiece)
-                    {
-                        if (targetSquare.row < SelectedSquare.row)
-                        {
-                            return true;
-                        }
-                        else
-                        {
-                            return false;
-                        }
-                    }
-                
+                if (SelectedSquare.Man.IsDarkPiece)
+                {
+                    //dark pieces will only be able to move down the board, so the target square y value must be more than the selected square y value.
+                    return  ((targetSquare.row > SelectedSquare.row) ? true : false);
+                   
+                }
+                else
+                {
+                    return ((targetSquare.row < SelectedSquare.row) ? true : false);                  
+                    
+                }                
                 
             }
 
