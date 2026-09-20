@@ -60,13 +60,13 @@ namespace CheckersNEA
         private void AddPiecesToBoard()
         {
             // Puts Dark pieces onto the board 
-            for (int column = 0; column < 3; column++)
+            for (int row = 0; row < 3; row++)
             {
-                for (int row = 0; row < BOARD_DIMENSION; row++)
+                for (int column = 0; column < BOARD_DIMENSION; column++)
                 {
                     if ((column + row) % 2 != 0)
                     {
-                        Square square = Board[row, column];
+                        Square square = Board[column,row];
                         square.Man = new Piece(DARK_INDICATOR);
                     }
                     
@@ -74,13 +74,13 @@ namespace CheckersNEA
             }
 
             // Puts Light pieces onto the board
-            for (int column = 5; column < 8; column++)
+            for (int row = 5; row < 8; row++)
             {
-                for (int row = 0; row < BOARD_DIMENSION; row++)
+                for (int column = 0; column < BOARD_DIMENSION; column++)
                 {
                     if ((column + row) % 2 != 0)
                     {
-                        Square square = Board[row, column];
+                        Square square = Board[column, row];
                         square.Man = new Piece(LIGHT_INDICATOR);
                     }
 

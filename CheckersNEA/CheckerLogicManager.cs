@@ -34,10 +34,59 @@ namespace CheckersNEA
             }
         }       
 
-        internal bool CheckIfMoveValid(Square[,] board, Square currentSquare, Square targetSquare)
+        internal bool CheckIfMoveValid(Square[,] board, Square SelectedSquare, Square targetSquare)
         {
-            //TODO Implement logic to check if the move is valid based on the rules of checkers.
-            return true;          
+            // If we have no piece on the current square, then the move is invalid.
+            if (SelectedSquare.Man == null)
+            {
+                return false;
+            }
+            // targetSquare needs to be empty for the move to be valid.
+            if (targetSquare.Man != null)
+            {
+                return false;
+            }
+            
+            if (SelectedSquare.Man.IsKing)
+            {
+                // Kings can move in any diagonal direction.
+            }
+            else
+            {
+                
+                    if (SelectedSquare.Man.IsDarkPiece)
+                    {
+                        //dark pieces will only be able to move down the board, so the target square y value must be more than the selected square y value.
+                        if (targetSquare.row > SelectedSquare.row)
+                        {
+                            return true;
+                        }
+                        else
+                        {
+                            return false;
+                        }
+                    }
+                    if (!SelectedSquare.Man.IsDarkPiece)
+                    {
+                        if (targetSquare.row < SelectedSquare.row)
+                        {
+                            return true;
+                        }
+                        else
+                        {
+                            return false;
+                        }
+                    }
+                
+                
+            }
+
+
+            return false;
+                          
         }
     }   
 }
+// validation to make sure moves are valid, and that the game state is updated correctly after each move.
+// first check if piece is king otherwise it will only be moving in one direction. Then check if the move is a valid diagonal move. 
+// 

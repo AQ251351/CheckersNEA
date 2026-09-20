@@ -136,10 +136,10 @@ namespace CheckersNEA
                 for (int column = 0; column < BoardContainer.BOARD_DIMENSION; column ++)
                 {
                     
-                    int x = (row * BoardContainer.SQUARE_SIZE);
-                    int y = (column * BoardContainer.SQUARE_SIZE);
+                    int y = (row * BoardContainer.SQUARE_SIZE);
+                    int x = (column * BoardContainer.SQUARE_SIZE);
 
-                    Square square = BoardContainer.Board[row, column];
+                    Square square = BoardContainer.Board[column, row];
                     
                     if (square.ColourOfSquare == SquareColour.Black )
                     {
