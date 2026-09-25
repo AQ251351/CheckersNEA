@@ -52,7 +52,7 @@ namespace CheckersNEA
             // divide by scale factor of the square to get the cooresponding array position
             int X_Coordinate = mouse.X / BoardContainer.SQUARE_SIZE;
             int Y_Coordinate = mouse.Y / BoardContainer.SQUARE_SIZE;
-            //Find position in the array of the square that was clicked on and store it in a variable
+            //Find position in the array of the square that was clicked on and store it in a variable.
             Square currentSquare = BoardContainer.Board[X_Coordinate, Y_Coordinate];
 
             
