@@ -33,14 +33,11 @@ namespace CheckersNEA
                 return instance;
             }
         }       
-
+        
         internal bool CheckIfMoveValid(Square[,] board, Square SelectedSquare, Square targetSquare)
         {
-            // If we have no piece on the current square, then the move is invalid.
-            if (SelectedSquare.Man == null)
-            {
-                return false;
-            }
+            
+            
             // targetSquare needs to be empty for the move to be valid.
             if (targetSquare.Man != null)
             {
@@ -56,13 +53,16 @@ namespace CheckersNEA
                 
                 if (SelectedSquare.Man.IsDarkPiece)
                 {
-                    //dark pieces will only be able to move down the board, so the target square y value must be more than the selected square y value.
-                    return  ((targetSquare.row > SelectedSquare.row) ? true : false);
+                    int NewRowNum = Convert.ToInt32(targetSquare.row);
+                    int SelectedRowNum = Convert.ToInt32(SelectedSquare.row);
+                    return  ( (NewRowNum - SelectedRowNum == 1) ? true : false);
                    
                 }
                 else
                 {
-                    return ((targetSquare.row < SelectedSquare.row) ? true : false);                  
+                    int NewRowNum = Convert.ToInt32(targetSquare.row);
+                    int SelectedRowNum = Convert.ToInt32(SelectedSquare.row);
+                    return ((SelectedRowNum - NewRowNum == 1) ? true : false);                  
                     
                 }                
                 

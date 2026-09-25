@@ -100,13 +100,17 @@ namespace CheckersNEA
             // Handle mouse input
             MouseState mouse = Mouse.GetState();
 
-            // as of now code only runs when the button is pressed meaning later methods are never ran. needs to be fixed
-            if (mouse.LeftButton == ButtonState.Pressed  )
+            Rectangle windowBounds = new Rectangle(0, 0 ,480, GraphicsDevice.Viewport.Height);
+            if(windowBounds.Contains (mouse.X, mouse.Y))
             {
-               
-                handleinput.HandleMouseEvent(mouse);
-                
+                if (mouse.LeftButton == ButtonState.Pressed)
+                {
+
+                    handleinput.HandleMouseEvent(mouse);
+
+                }
             }
+            
 
 
             base.Update(gameTime);

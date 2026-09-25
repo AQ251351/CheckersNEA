@@ -6,7 +6,7 @@
      * This class represents a square on the checkers board. 
      * 
      ***********************************************************/
-
+    
     public class Square
     {
         public enum SquareColour

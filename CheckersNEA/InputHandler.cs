@@ -44,6 +44,7 @@ namespace CheckersNEA
              * and carries out the necessary actions based on the state of the square and what 
              * mouse event occurred. 
              ***********************************************************/
+        
         public void HandleMouseEvent(MouseState mouse)
         {
            
@@ -54,8 +55,9 @@ namespace CheckersNEA
             //Find position in the array of the square that was clicked on and store it in a variable
             Square currentSquare = BoardContainer.Board[X_Coordinate, Y_Coordinate];
 
+            
             //runs when the left mouse button is pressed`
-            if (mouse.LeftButton == ButtonState.Pressed)
+            if (mouse.LeftButton == ButtonState.Pressed )
             {
                 // if no piece is selected, we want to select a piece to be moved. If a piece is already selected, we want to move it to the new square.
                 if (SquareSelected == null)
@@ -66,12 +68,15 @@ namespace CheckersNEA
                         //Checks that the piece chosen is the colour of the player whose turn it is. If it is, then the square is highlighted and the piece is selected.
                         if ((PlayerOneTurn && currentSquare.Man.IsDarkPiece) || (!PlayerOneTurn && !currentSquare.Man.IsDarkPiece))
                         {
+
                             //highlights square
                             currentSquare.ColourOfSquare = SquareColour.Yellow;
 
                             // saves current square as to be used later when moving the piece. 
-                            BoardContainer.Board[X_Coordinate, Y_Coordinate] = currentSquare;
-                            SquareSelected = currentSquare;
+                            
+                                SquareSelected = currentSquare;
+                            
+                            
 
                             // Switch turns after a piece is selected
                             if (PlayerOneTurn)
@@ -93,7 +98,8 @@ namespace CheckersNEA
                     if (CheckerLogicManager.Instance.CheckIfMoveValid(BoardContainer.Board, SquareSelected, currentSquare))
                     {
                         ChoosePieceMove(mouse, currentSquare);
-                    }   
+                    }
+                    
                 }
             }             
 
