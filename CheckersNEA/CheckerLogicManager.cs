@@ -32,8 +32,16 @@ namespace CheckersNEA
                 }
                 return instance;
             }
-        }       
-        
+        }
+
+        /**
+         * Method: CheckIfMoveValid
+         * 
+         * This method checks if a move is valid based on the current state of the board and the rules of checkers.
+         * It takes in the current board state, the selected square, and the target square as parameters.
+         * It returns true if the move is valid, and false otherwise.
+         * TODO. Still in development. Need to add logic to check if the move is a valid diagonal move, and if the piece is a king or not.
+         */
         internal bool CheckIfMoveValid(Square[,] board, Square SelectedSquare, Square targetSquare)
         {
             
