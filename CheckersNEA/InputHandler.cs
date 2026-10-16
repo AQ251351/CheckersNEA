@@ -49,7 +49,7 @@ namespace CheckersNEA
         
         public void HandleMouseEvent(MouseState mouse)
         {
-
+            
             TakingMove = TakingMovePossible();
             // divide by scale factor of the square to get the cooresponding array position
             int X_Coordinate = mouse.X / BoardContainer.SQUARE_SIZE;
@@ -83,19 +83,53 @@ namespace CheckersNEA
         }
         bool TakingMovePossible()
         {
-            if (PlayerOneTurn )
+            foreach (Square s in BoardContainer.Board)
             {
-                foreach (Square s in BoardContainer.Board)
+                if (s.Man != null)
                 {
-                    if (s.Man != null)
-                    {
-
-                    }
+                    CheckAdjacentSquares(s);
                 }
             }
-            
+           
             return false;
         }
+        void CheckAdjacentSquares(Square S)
+        {
+            int addIncrement = 7;
+            int TakeIncrement = 3;
+
+            if (S.column == 0) 
+            {
+            addIncrement = 8;
+            TakeIncrement = 2;
+            }
+            else if (S.column == 8)
+            {
+            TakeIncrement = 2;
+            }
+            
+            int skipamount = S.row*8 + S.column +addIncrement;
+            if (PlayerOneTurn)
+            {
+                foreach (Square Sq in BoardContainer.Board.Cast<Square>().Skip(skipamount).Take(TakeIncrement))
+                {
+                    if (Sq.Man != null && Sq.Man.IsDarkPiece == false )
+                    {
+                        skipamount = Sq.row * 8 + S.column + addIncrement;
+                        foreach (Square Squ in BoardContainer.Board.Cast<Square>().Skip(skipamount + 8).Take(TakeIncrement))
+                        {
+                            
+                            if (Squ.Man == null )
+                            {
+                                Squ.ColourOfSquare = SquareColour.Yellow;
+                            }
+                        }
+                    }
+                }
+
+            }
+        }
+
         /************************************************************
          * Method: CheckAndSelectChosenSquare
          * Checks the chosen square is valid and then selects it

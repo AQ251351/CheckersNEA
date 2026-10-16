@@ -15,8 +15,8 @@
         }
         public SquareColour ColourOfSquare { set; get; }
         // each square will hold its own x and y postiton within the array. Square position will never change in the board, so we can make these properties read-only.
-        public int column { get; }
-        public int row { get; }
+        public int column { get; set; }
+        public int row { get; set; }
         public Piece Man { get; set; }
 
         /************************************************************
