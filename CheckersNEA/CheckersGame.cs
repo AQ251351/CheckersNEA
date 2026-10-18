@@ -54,13 +54,9 @@ namespace CheckersNEA
         protected override void Initialize()
         {
         
-            
-
             checkersGame =  new BoardContainer();
             handleinput = new InputHandler();
 
-            
-           
             base.Initialize();
         }
 
