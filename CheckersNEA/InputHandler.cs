@@ -22,11 +22,7 @@ namespace CheckersNEA
     internal class InputHandler
     {
        //enum to hold possible direction values. direction will be relative to the players view not relative to checkers piece.
-        public enum PossibleMoveDirection
-        {
-            Left, Right,Both,None
-        }
-        public PossibleMoveDirection Direction { get; set; }
+        
         private Square SquareSelected = null;
         private bool PlayerOneTurn;
         private bool TakingMove;
@@ -108,7 +104,7 @@ namespace CheckersNEA
                     if ((PlayerOneTurn && s.Man.IsDarkPiece) || (!PlayerOneTurn && !s.Man.IsDarkPiece))
                     {
                         
-                        if (ChoiceAvailable(s) == PossibleMoveDirection.None )
+                        if (ChoiceAvailable(s).Count != 2 )
                         {
                             PossibleTakingMoves.AddRange(CheckTakingMove(s));
                             if (PossibleTakingMoves is { Count: > 0 } && PossibleTakingMoves[0] != null)
@@ -175,13 +171,13 @@ namespace CheckersNEA
          * Method: CheckAndSelectChosenSquare
          * Checks the chosen square is valid and then selects it
          ***********************************************************/
-        PossibleMoveDirection ChoiceAvailable(Square squareChosen)
+        List<Square> ChoiceAvailable(Square squareChosen)
         {
             int SquaresToCheck = 3;
             int newRow = 0;
             int newColumn = 0;
-            int count = 0;
 
+            List<Square> PossibleMoves = new List<Square>();
             //When it is player ones turn the squares below it must be checked so we add 1.When player 2s turn we minus 1
             if (PlayerOneTurn)
             {
@@ -207,27 +203,12 @@ namespace CheckersNEA
                 // Checks that the black squares (playable squares) are free to move to. 
                 if (BoardContainer.Board[newColumn + i, newRow].Man == null && BoardContainer.Board[newColumn + i, newRow].ColourOfSquare != SquareColour.Red)
                 {
-                    count++;
-                    if (i > 0 && count == 1)
-                    {
-                        return PossibleMoveDirection.Right;
-                    }
+                    PossibleMoves.Add(BoardContainer.Board[newColumn + i, newRow]);
                 }
             }
-            if (count ==1 )
-            {
-                return PossibleMoveDirection.Left;
-            }
-            else if (count == 2)
-            {
-                return PossibleMoveDirection.Both;
-            }
-            else
-            {
-                return PossibleMoveDirection.None;
-            }
-            
-            
+            return PossibleMoves;
+
+
         }
         Square CheckAndSelectChosenSquare (Square currentSquare )
         {
@@ -238,7 +219,7 @@ namespace CheckersNEA
                 //Checks that the piece chosen is the colour of the player whose turn it is. If it is, then the square is highlighted and the piece is selected.
                 if ((PlayerOneTurn && currentSquare.Man.IsDarkPiece) || (!PlayerOneTurn && !currentSquare.Man.IsDarkPiece))
                 {
-                    if (ChoiceAvailable(currentSquare) == PossibleMoveDirection.None)
+                    if (ChoiceAvailable(currentSquare).Count == 0 )
                     {
                         return null;
                     }
