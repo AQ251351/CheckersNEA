@@ -94,76 +94,62 @@ namespace CheckersNEA
         
         bool TakingMovePossible()
         {
-            List<Square> PossibleTakingMoves = new List<Square>();
+            List<Square> TakingMoves = new List<Square>();
             
+           
             foreach (Square s in BoardContainer.Board)
             {
-                
-                if (s.Man != null )
+                if (s.Man != null)
                 {
                     if ((PlayerOneTurn && s.Man.IsDarkPiece) || (!PlayerOneTurn && !s.Man.IsDarkPiece))
                     {
-                        
-                        if (ChoiceAvailable(s).Count != 2 )
+                        if (BlockedSquares(s).Count == 1 )
                         {
-                            PossibleTakingMoves.AddRange(CheckTakingMove(s));
-                            if (PossibleTakingMoves is { Count: > 0 } && PossibleTakingMoves[0] != null)
+                            if (BlockedSquares(s)[0].column > s.column)
                             {
-                                PossibleTakingMoves[0].ColourOfSquare = SquareColour.Yellow;
+                                TakingMoves.AddRange(CheckTakingMove(BlockedSquares(s)[0], 1));
+                                if (TakingMoves.Count > 0)
+                                {
+                                    TakingMoves[0].ColourOfSquare = SquareColour.Yellow;
+                                }
                             }
-                            
+                            else
+                            {
+                                TakingMoves.AddRange(CheckTakingMove(BlockedSquares(s)[0], -1));
+                                if (TakingMoves.Count > 0)
+                                {
+                                    TakingMoves[0].ColourOfSquare = SquareColour.Yellow;
+                                }
+                                
+                            }
+
                         }
                     }
                 }
+                    
+                
             }
            
             return false;
         }
         
-        List<Square> CheckTakingMove(Square s)
+        List<Square> CheckTakingMove(Square s, int ColumnDirection)
         {
             List<Square> PossibleTakingMoves = new List<Square>();
             int newRow = 0;
-            int newCol = s.column - 2;
             if (PlayerOneTurn)
             {
-                newRow = s.row + 2;
+                newRow = s.row + 1;
                 
             }
             else
             {
-                newRow = s.row - 2;
+                newRow = s.row - 1;
             }
-            
-            if ( s.column > 1 && s.row < 6)
+            if (BoardContainer.Board[s.column + ColumnDirection, newRow].Man == null)
             {
-                for (int i = 0; i<=2; i += 2)
-                {
- 
-                    if (BoardContainer.Board[newCol + i,newRow].Man == null )
-                    {
-                      PossibleTakingMoves.Add(BoardContainer.Board[newCol +i, newRow]);
-                    }
-                    
-                }
+                PossibleTakingMoves.Add(BoardContainer.Board[s.column + ColumnDirection, newRow]);
             }
-            else if (s.column <= 1)
-            {
-                newCol = s.column + 2;
-                if (BoardContainer.Board[newCol, newRow].Man == null)
-                {
-                    PossibleTakingMoves.Add(BoardContainer.Board[newCol, newRow]);
-                }
-            }
-            else
-            {
-                newCol = s.column - 2;
-                if (BoardContainer.Board[newCol, newRow].Man == null)
-                {
-                    PossibleTakingMoves.Add(BoardContainer.Board[newCol, newRow]);
-                }
-            }
-            
             return PossibleTakingMoves;
         }
 
@@ -171,7 +157,7 @@ namespace CheckersNEA
          * Method: CheckAndSelectChosenSquare
          * Checks the chosen square is valid and then selects it
          ***********************************************************/
-        List<Square> ChoiceAvailable(Square squareChosen)
+        List<Square> BlockedSquares(Square squareChosen)
         {
             int SquaresToCheck = 3;
             int newRow = 0;
@@ -201,9 +187,10 @@ namespace CheckersNEA
             for (int i = 0; i < SquaresToCheck; i++)
             {
                 // Checks that the black squares (playable squares) are free to move to. 
-                if (BoardContainer.Board[newColumn + i, newRow].Man == null && BoardContainer.Board[newColumn + i, newRow].ColourOfSquare != SquareColour.Red)
+                if (!(BoardContainer.Board[newColumn + i, newRow].Man == null) && BoardContainer.Board[newColumn + i, newRow].ColourOfSquare != SquareColour.Red)
                 {
                     PossibleMoves.Add(BoardContainer.Board[newColumn + i, newRow]);
+                    //BoardContainer.Board[newColumn + i, newRow].ColourOfSquare = SquareColour.Yellow;
                 }
             }
             return PossibleMoves;
@@ -219,7 +206,7 @@ namespace CheckersNEA
                 //Checks that the piece chosen is the colour of the player whose turn it is. If it is, then the square is highlighted and the piece is selected.
                 if ((PlayerOneTurn && currentSquare.Man.IsDarkPiece) || (!PlayerOneTurn && !currentSquare.Man.IsDarkPiece))
                 {
-                    if (ChoiceAvailable(currentSquare).Count == 0 )
+                    if (BlockedSquares(currentSquare).Count == 2 )
                     {
                         return null;
                     }
@@ -249,7 +236,7 @@ namespace CheckersNEA
                       
 
                
-            if (newSquare.Man == null && newSquare.ColourOfSquare == SquareColour.Black)
+            if (newSquare.Man == null && newSquare.ColourOfSquare != SquareColour.Red)
             {
                 //as soon as the button is pressed the piece should be moved from the old position to the new position
                 
