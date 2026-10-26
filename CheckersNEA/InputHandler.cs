@@ -101,7 +101,7 @@ namespace CheckersNEA
                 {
                     if ((PlayerOneTurn && s.Man.IsDarkPiece) || (!PlayerOneTurn && !s.Man.IsDarkPiece))
                     {
-
+                        //Checks if the piece chosen has any blocked moves if not then a piece cannot be taken and the method returns false.
                         if (BlockedSquares(s).Count == 0)
                         {
                             continue;
@@ -111,6 +111,7 @@ namespace CheckersNEA
                         {
 
                         }
+
                         else if (BlockedSquares(s).Count == 1)
                         {
                             if (BlockedSquares(s)[0].column == s.column + 1 && s.column + 1 != 7)
