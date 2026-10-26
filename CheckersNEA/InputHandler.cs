@@ -95,60 +95,70 @@ namespace CheckersNEA
         bool TakingMovePossible()
         {
             List<Square> TakingMoves = new List<Square>();
-            
-           
             foreach (Square s in BoardContainer.Board)
             {
                 if (s.Man != null)
                 {
                     if ((PlayerOneTurn && s.Man.IsDarkPiece) || (!PlayerOneTurn && !s.Man.IsDarkPiece))
                     {
-                        if (BlockedSquares(s).Count == 1 )
+
+                        if (BlockedSquares(s).Count == 0)
                         {
-                            if (BlockedSquares(s)[0].column > s.column)
+                            continue;
+
+                        }
+                        else if (BlockedSquares(s).Count == 2)
+                        {
+
+                        }
+                        else if (BlockedSquares(s).Count == 1)
+                        {
+                            if (BlockedSquares(s)[0].column == s.column + 1 && s.column + 1 != 7)
                             {
                                 TakingMoves.AddRange(CheckTakingMove(BlockedSquares(s)[0], 1));
                                 if (TakingMoves.Count > 0)
                                 {
-                                    TakingMoves[0].ColourOfSquare = SquareColour.Yellow;
+                                    
                                 }
                             }
-                            else
+                            else if (BlockedSquares(s)[0].column == s.column - 1 && s.column - 1 != 0)
                             {
                                 TakingMoves.AddRange(CheckTakingMove(BlockedSquares(s)[0], -1));
                                 if (TakingMoves.Count > 0)
                                 {
-                                    TakingMoves[0].ColourOfSquare = SquareColour.Yellow;
+                                    
                                 }
-                                
-                            }
 
+                            }
                         }
+
                     }
                 }
-                    
-                
+             
             }
            
             return false;
         }
         
-        List<Square> CheckTakingMove(Square s, int ColumnDirection)
+        List<Square> CheckTakingMove(Square enemysquare, int ColumnDirection)
         {
+            enemysquare.ColourOfSquare = SquareColour.Yellow;
             List<Square> PossibleTakingMoves = new List<Square>();
             int newRow = 0;
             if (PlayerOneTurn)
             {
-                newRow = s.row + 1;
+                newRow = enemysquare.row + 1;
                 
             }
             else
             {
-                newRow = s.row - 1;
+                newRow = enemysquare.row - 1;
             }
-            if (BoardContainer.Board[s.column + ColumnDirection, newRow].Man == null)
+            if (BoardContainer.Board[enemysquare.column + ColumnDirection, newRow].Man == null)
             {
-                PossibleTakingMoves.Add(BoardContainer.Board[s.column + ColumnDirection, newRow]);
+                
+                PossibleTakingMoves.Add(BoardContainer.Board[enemysquare.column + ColumnDirection, newRow]);
+                
             }
             return PossibleTakingMoves;
         }
@@ -206,13 +216,17 @@ namespace CheckersNEA
                 //Checks that the piece chosen is the colour of the player whose turn it is. If it is, then the square is highlighted and the piece is selected.
                 if ((PlayerOneTurn && currentSquare.Man.IsDarkPiece) || (!PlayerOneTurn && !currentSquare.Man.IsDarkPiece))
                 {
-                    if (BlockedSquares(currentSquare).Count == 2 )
+                    // checks if the piece chosen has any valid moves. If it does not, then the piece cannot be selected and the method returns null.
+                    if (BlockedSquares(currentSquare).Count == 2 || currentSquare.column == 0 && BlockedSquares(currentSquare).Count == 1 || currentSquare.column == 7 && BlockedSquares(currentSquare).Count == 1)
                     {
                         return null;
                     }
-
-
                     
+                    
+                        
+                    
+
+
                     //highlights square
                     currentSquare.ColourOfSquare = SquareColour.Yellow;
 
