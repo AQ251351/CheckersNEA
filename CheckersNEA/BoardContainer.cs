@@ -66,7 +66,7 @@ namespace CheckersNEA
                 {
                     if ((column + row) % 2 != 0)
                     {
-                        Square square = Board[column,row];
+                        Square square = Board[row,column];
                         square.Man = new Piece(DARK_INDICATOR);
                     }
                     
@@ -80,7 +80,7 @@ namespace CheckersNEA
                 {
                     if ((column + row) % 2 != 0)
                     {
-                        Square square = Board[column, row];
+                        Square square = Board[row, column];
                         square.Man = new Piece(LIGHT_INDICATOR);
                     }
 
@@ -96,22 +96,22 @@ namespace CheckersNEA
         private void CreateBoard()
         {
             //Sets up the board squares to be black or white,
-            for (int column = 0; column < BOARD_DIMENSION; column ++)
+            for (int row = 0; row < BOARD_DIMENSION; row++)
             {
-                for (int row = 0; row < BOARD_DIMENSION; row++) 
+                for (int column = 0; column < BOARD_DIMENSION; column++) 
                 {
                     if ((column + row) % 2 != 0) 
                     {
                         SquareColour colour = SquareColour.Black;
-                        Board[column, row] = new Square(colour, column, row);
+                        Board[row, column] = new Square(colour, column, row);
                     }
                     else
                     {
                         SquareColour colour = SquareColour.Red;
-                        Board[column, row] = new Square(colour, column, row);
+                        Board[row, column] = new Square(colour, column, row);
                     }
                 }
-            }          
+            }           
         }
         
     }

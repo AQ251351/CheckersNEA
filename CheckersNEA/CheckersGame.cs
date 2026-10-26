@@ -125,10 +125,7 @@ namespace CheckersNEA
         {
             GraphicsDevice.Clear(Color.CornflowerBlue);
 
-            // TODO: Add your drawing code here
-            
-            
-            
+                        
             _spriteBatch.Begin();
 
             for (int row = 0; row < BoardContainer.BOARD_DIMENSION; row++) 
@@ -139,7 +136,7 @@ namespace CheckersNEA
                     int y = (row * BoardContainer.SQUARE_SIZE);
                     int x = (column * BoardContainer.SQUARE_SIZE);
 
-                    Square square = BoardContainer.Board[column, row];
+                    Square square = BoardContainer.Board[row, column];
                     
                     if (square.ColourOfSquare == SquareColour.Black )
                     {
