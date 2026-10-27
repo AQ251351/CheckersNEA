@@ -151,6 +151,10 @@ namespace CheckersNEA
                     {
                         _spriteBatch.Draw(_texture, new Rectangle(x, y, BoardContainer.SQUARE_SIZE, BoardContainer.SQUARE_SIZE), Color.Yellow);
                     }
+                    else if (square.ColourOfSquare == SquareColour.Green)
+                    {
+                        _spriteBatch.Draw(_texture, new Rectangle(x, y, BoardContainer.SQUARE_SIZE, BoardContainer.SQUARE_SIZE), Color.Green);
+                    }
                     // if there is a piece in the square 
                     if (square.Man != null )
                     {              

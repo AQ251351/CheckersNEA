@@ -24,8 +24,8 @@ namespace CheckersNEA
        //enum to hold possible direction values. direction will be relative to the players view not relative to checkers piece.
         
         private Square SquareSelected = null;
-        private bool PlayerOneTurn;
-        private bool TakingMove;
+        private bool PlayerOneTurn;        
+        List<Square> TotalTakingMovesList = null;
         //private bool squareChanged;
         /************************************************************
          * Constructor: InputHandler
@@ -78,7 +78,22 @@ namespace CheckersNEA
                     if (CheckerLogicManager.Instance.CheckIfMoveValid(BoardContainer.Board, SquareSelected, currentSquare))
                     {
                         PieceMove(mouse, currentSquare);
-                        TakingMovePossible();                        
+                        if (TakingMovePossible())
+                        {
+                            // TODO If a taking move is possible, we need to check if the piece that was just moved can make a taking move.
+                            //TODO List<Square> TakingMoves = CheckerLogicManager.Instance.CheckSelectedPieceCanTakeAPiece(BoardContainer.Board, currentSquare);
+                            if (TotalTakingMovesList.Count > 0)
+                            {
+                                // If the piece can make a taking move, we need to highlight the possible squares that it can move to.
+                                foreach (Square s in TotalTakingMovesList)
+                                {
+                                    s.ColourOfSquare = SquareColour.Green;
+                                }
+
+
+                            }
+                        }
+                        
                     }
                     
                 }
@@ -91,12 +106,22 @@ namespace CheckersNEA
          * 
          * This method checks if a taking move is possible for the current player.
          * It iterates through the board and checks each piece to see if it can make a taking move.
+         * If it can it adds the possible taking moves to a list.
          * It returns true if a taking move is possible, and false otherwise.
          ***********************************************************/
 
         bool TakingMovePossible()
         {
-            List<Square> TotalTakingMovesList = new List<Square>();
+            // start by clearing the board of any previous taking moves that were highlighted.
+            foreach (Square s in BoardContainer.Board)
+            {
+                if (s.ColourOfSquare == SquareColour.Green)
+                {
+                    s.ColourOfSquare = SquareColour.Black;
+                }
+            }
+
+            TotalTakingMovesList = new List<Square>();
             foreach (Square s in BoardContainer.Board)
             {
                 if (s.Man != null)
@@ -117,7 +142,7 @@ namespace CheckersNEA
              
             }
            
-            return false;
+            return (TotalTakingMovesList.Count > 0 ? true : false);
         }
         
         List<Square> CheckTakingMove(Square enemysquare, int ColumnDirection)

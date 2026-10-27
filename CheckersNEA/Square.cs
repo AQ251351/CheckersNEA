@@ -11,7 +11,7 @@
     {
         public enum SquareColour
         { 
-            Black, Yellow, Red
+            Black, Yellow, Red, Green
         }
         public SquareColour ColourOfSquare { set; get; }
         // each square will hold its own x and y postiton within the array. Square position will never change in the board, so we can make these properties read-only.

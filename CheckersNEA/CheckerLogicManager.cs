@@ -34,6 +34,8 @@ namespace CheckersNEA
             }
         }
 
+        /**
+         */
         internal List<Square> CheckSelectedPieceCanTakeAPiece(Square[,] board, Square selectedSquare)
         {
             List <Square> possibleTakingMoves = new List<Square>();
@@ -41,14 +43,8 @@ namespace CheckersNEA
             if (selectedSquare.Man != null)
             {
                 checkDirectionTakeMoves(board, selectedSquare, possibleTakingMoves);
-                int direction = selectedSquare.Man.IsDarkPiece ? 1 : -1;
-
-
             }
-                
-            {
-                return possibleTakingMoves;
-            }
+                                                        
             return possibleTakingMoves;
 
         }
@@ -65,17 +61,17 @@ namespace CheckersNEA
             if (selectedSquare.Man.IsKing)
             {
                 // Kings can move in any diagonal direction, so we need to check all four diagonals
-                CheckDiagonalTakeMoves(board, selectedSquare, 2, 1, possibleTakingMoves);
-                CheckDiagonalTakeMoves(board, selectedSquare, 2, -1, possibleTakingMoves);
-                CheckDiagonalTakeMoves(board, selectedSquare, -2, 1, possibleTakingMoves);
-                CheckDiagonalTakeMoves(board, selectedSquare, -2, -1, possibleTakingMoves);
+                CheckDiagonalTakeMoves(board, selectedSquare, 2, 2, possibleTakingMoves);
+                CheckDiagonalTakeMoves(board, selectedSquare, 2, -2, possibleTakingMoves);
+                CheckDiagonalTakeMoves(board, selectedSquare, -2, 2, possibleTakingMoves);
+                CheckDiagonalTakeMoves(board, selectedSquare, -2, -2, possibleTakingMoves);
             }
             else
             {
                 // Non-king pieces can only move forward diagonally
                 int direction = selectedSquare.Man.IsDarkPiece ? 2 : -2;
-                CheckDiagonalTakeMoves(board, selectedSquare, direction, 1, possibleTakingMoves);
-                CheckDiagonalTakeMoves(board, selectedSquare, direction, -1, possibleTakingMoves);
+                CheckDiagonalTakeMoves(board, selectedSquare, direction, 2, possibleTakingMoves);
+                CheckDiagonalTakeMoves(board, selectedSquare, direction, -2, possibleTakingMoves);
             }
         }
 
@@ -86,14 +82,14 @@ namespace CheckersNEA
          * It takes in the current board state, the selected square, 
          * the direction of the move, and a list to store possible taking moves as parameters.
          ***********************************************************/
-        private void CheckDiagonalTakeMoves(Square[,] board, Square selectedSquare, int row, int column, List<Square> possibleTakingMoves)
+        private void CheckDiagonalTakeMoves(Square[,] board, Square selectedSquare, int direcionRow, int columnIndex, List<Square> possibleTakingMoves)
         {
             // sanity check. Are we actually checking a square that has a piece on it?
-            if (selectedSquare.Man == null)
+            if (selectedSquare.Man != null)
             {
                 // Work out the possible row and column of the target square based on the direction of the move
-                int possibleRow = selectedSquare.row + row;
-                int possibleColumn = selectedSquare.column + column;
+                int possibleRow = selectedSquare.row + direcionRow;
+                int possibleColumn = selectedSquare.column + columnIndex;
 
                 // Check if the possible move is within the bounds of the board
                 if (possibleRow < 0 || possibleRow >= BoardContainer.BOARD_DIMENSION ||
@@ -101,16 +97,33 @@ namespace CheckersNEA
                 {
                     return;
                 }
+
+                // This check is to ensure that the target square is not on the same row as the selected square,
+                // as taking moves must be diagonal if the row is only 2 squares away. 
+                if (possibleColumn ==  selectedSquare.column &&
+                    (possibleRow == (selectedSquare.row + 2)|| 
+                    (possibleRow == (selectedSquare.row - 2))))
+                {
+                    return;
+                }
                 Square targetSquare = board[possibleRow, possibleColumn];
 
+                // No point continuing if the target square is a red square, as pieces cannot move to red squares.
+                // Also, if the target square already has a piece on it, we cannot move there.
+                if (targetSquare.ColourOfSquare == Square.SquareColour.Red ||
+                    targetSquare.Man != null)
+                {
+                    return;
+                }
+
                 // We now work out the position of the square that is in between the selected square and the target square. 
-                int middleRow = selectedSquare.row + row / 2;
-                int middleColumn = selectedSquare.column + column / 2;
+                int middleRow = selectedSquare.row + direcionRow / 2;
+                int middleColumn = selectedSquare.column + columnIndex / 2;
                
                 Square middleSquare = board[middleRow, middleColumn];
 
-                // Check if the target square is empty and the middle square has an opponent's piece
-                if (targetSquare.Man == null && middleSquare.Man != null &&
+                // Check if the middle square has an opponent's piece
+                if (middleSquare.Man != null &&
                     middleSquare.Man.IsDarkPiece != selectedSquare.Man.IsDarkPiece)
                 {
                     possibleTakingMoves.Add(targetSquare);
