@@ -3,6 +3,7 @@ using Microsoft.Xna.Framework.Graphics;
 using Microsoft.Xna.Framework.Input;
 using System;
 using System.ComponentModel.DataAnnotations;
+using System.Threading.Tasks;
 using static CheckersNEA.Square;
 
 namespace CheckersNEA
@@ -102,7 +103,13 @@ namespace CheckersNEA
                 if (mouse.LeftButton == ButtonState.Pressed)
                 {
 
-                    handleinput.HandleMouseEvent(mouse);
+                    InputHandler.UserEventAction action =  handleinput.HandleMouseEvent(mouse);
+
+                    if (action == InputHandler.UserEventAction.INVALID_SELECTION)
+                    {
+                        // Fire and forget, or await if inside an async method
+                        Task.Run(() => ShowInvalidInputPopup("You must select a piece that can take an opponent's piece."));
+                    }
 
                 }
             }
@@ -113,7 +120,20 @@ namespace CheckersNEA
 
         }
 
-        
+        private async Task ShowInvalidInputPopup(String message)
+        {
+            // MessageBox.Show is asynchronous and returns the index of the clicked button
+            var buttons = new[] { "OK" };
+
+            int? result = await MessageBox.Show(
+                "Invalid Input",
+                message,
+                buttons
+            );
+        }
+
+       
+
 
         /*****************************************************
          * Method: Draw

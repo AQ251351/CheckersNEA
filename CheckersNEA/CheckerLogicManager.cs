@@ -100,12 +100,12 @@ namespace CheckersNEA
 
                 // This check is to ensure that the target square is not on the same row as the selected square,
                 // as taking moves must be diagonal if the row is only 2 squares away. 
-                if (possibleColumn ==  selectedSquare.column &&
+                /*if (possibleColumn ==  selectedSquare.column &&
                     (possibleRow == (selectedSquare.row + 2)|| 
                     (possibleRow == (selectedSquare.row - 2))))
                 {
                     return;
-                }
+                }*/
                 Square targetSquare = board[possibleRow, possibleColumn];
 
                 // No point continuing if the target square is a red square, as pieces cannot move to red squares.

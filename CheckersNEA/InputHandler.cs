@@ -25,7 +25,12 @@ namespace CheckersNEA
         
         private Square SquareSelected = null;
         private bool PlayerOneTurn;        
-        List<Square> TotalTakingMovesList = null;
+        List<TakingSqaureHolder> TotalTakingMovesList = null;
+
+        public enum UserEventAction
+        {
+            INVALID_SELECTION, SELECTED_PIECE, MOVED_PIECE
+        }
         //private bool squareChanged;
         /************************************************************
          * Constructor: InputHandler
@@ -48,11 +53,9 @@ namespace CheckersNEA
              * mouse event occurred. 
              ***********************************************************/
         
-        public void HandleMouseEvent(MouseState mouse)
+        public UserEventAction HandleMouseEvent(MouseState mouse)
         {
-           
-           
-            
+        
             // divide by scale factor of the square to get the cooresponding array position
             int columnPosition = mouse.X / BoardContainer.SQUARE_SIZE;
             int rowPosition= mouse.Y / BoardContainer.SQUARE_SIZE;
@@ -63,41 +66,59 @@ namespace CheckersNEA
             //runs when the left mouse button is pressed`
             if (mouse.LeftButton == ButtonState.Pressed )
             {
-                
+
                 // if no piece is selected, we want to select a piece to be moved. If a piece is already selected, we want to move it to the new square.
                 if (SquareSelected == null)
                 {
-                    SquareSelected = CheckAndSelectChosenSquare(currentSquare);
-
-                }
-                else
-                {
-                    //if a piece is already selected, we want to move it to the new square
-                    //TODO: we will need to add some logic here to check if the move is valid before moving the piece
-                    
-                    if (CheckerLogicManager.Instance.CheckIfMoveValid(BoardContainer.Board, SquareSelected, currentSquare))
+                    if (TotalTakingMovesList != null && TotalTakingMovesList.Count > 0)
                     {
-                        PieceMove(mouse, currentSquare);
-                        if (TakingMovePossible())
+                        // If there are taking moves available, we need to check if the selected square is one of the squares that can make a taking move.
+                        bool isTakingMoveSquare = false;
+                        foreach (TakingSqaureHolder holder in TotalTakingMovesList)
                         {
-                            // TODO If a taking move is possible, we need to check if the piece that was just moved can make a taking move.
-                            //TODO List<Square> TakingMoves = CheckerLogicManager.Instance.CheckSelectedPieceCanTakeAPiece(BoardContainer.Board, currentSquare);
-                            if (TotalTakingMovesList.Count > 0)
+                            if (holder.targetSquare == currentSquare)
                             {
-                                // If the piece can make a taking move, we need to highlight the possible squares that it can move to.
-                                foreach (Square s in TotalTakingMovesList)
-                                {
-                                    s.ColourOfSquare = SquareColour.Green;
-                                }
-
-
+                                isTakingMoveSquare = true;
+                                break;
                             }
                         }
-                        
+                        if (!isTakingMoveSquare)
+                        {
+                            // If the selected square is not one of the squares that can make a taking move, we need to ignore the selection and return.
+                            return UserEventAction.INVALID_SELECTION;
+                        }
                     }
-                    
+                    SquareSelected = CheckAndSelectChosenSquare(currentSquare);
+                    return UserEventAction.SELECTED_PIECE;
+
                 }
-            }             
+                //if a piece is already selected, we want to move it to the new square
+                //TODO: we will need to add some logic here to check if the move is valid before moving the piece
+                    
+                if (CheckerLogicManager.Instance.CheckIfMoveValid(BoardContainer.Board, SquareSelected, currentSquare))
+                {
+                    PieceMove(mouse, currentSquare);
+                    if (TakingMovePossible())
+                    {
+                        // TODO If a taking move is possible, we need to check if the piece that was just moved can make a taking move.
+                        //TODO List<Square> TakingMoves = CheckerLogicManager.Instance.CheckSelectedPieceCanTakeAPiece(BoardContainer.Board, currentSquare);
+                        if (TotalTakingMovesList.Count > 0)
+                        {
+                            // If the piece can make a taking move, we need to highlight the possible squares that it can move to.
+                            foreach (TakingSqaureHolder holder in TotalTakingMovesList)
+                            {
+                                holder.getTakingSquares().ForEach(s => s.ColourOfSquare = SquareColour.Green);
+                                //s.ColourOfSquare = SquareColour.Green;
+                            }
+
+
+                        }
+                    }
+                        
+                }                                      
+                
+            }
+            return UserEventAction.MOVED_PIECE;
 
         }
 
@@ -121,7 +142,7 @@ namespace CheckersNEA
                 }
             }
 
-            TotalTakingMovesList = new List<Square>();
+            TotalTakingMovesList = new List<TakingSqaureHolder>();
             foreach (Square s in BoardContainer.Board)
             {
                 if (s.Man != null)
@@ -134,7 +155,9 @@ namespace CheckersNEA
                         List<Square> TakingMoves = CheckerLogicManager.Instance.CheckSelectedPieceCanTakeAPiece(BoardContainer.Board, s);
                         if (TakingMoves.Count > 0)
                         {
-                            TotalTakingMovesList.AddRange(TakingMoves);
+                            TakingSqaureHolder newHolder = new TakingSqaureHolder(s);
+                            newHolder.AddTakingSquares(TakingMoves);
+                            TotalTakingMovesList.AddRange(newHolder);
                         }
                     }
                         
