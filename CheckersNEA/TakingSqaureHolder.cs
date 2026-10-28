@@ -13,9 +13,9 @@ namespace CheckersNEA
         public Square targetSquare {get; set; }
         private List<Square> takingSquares = new List<Square>();
 
-        public TakingSqaureHolder(Square targetSquare)
+        public TakingSqaureHolder(Square NewTargetSquare)
         {
-            this.targetSquare = targetSquare;
+            this.targetSquare = NewTargetSquare;
         }
         
        

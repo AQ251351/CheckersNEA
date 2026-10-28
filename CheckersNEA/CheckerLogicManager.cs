@@ -38,11 +38,11 @@ namespace CheckersNEA
          */
         internal List<Square> CheckSelectedPieceCanTakeAPiece(Square[,] board, Square selectedSquare)
         {
-            List <Square> possibleTakingMoves = new List<Square>();
+            List <Square> possibleTakingMoves = [];
 
             if (selectedSquare.Man != null)
             {
-                checkDirectionTakeMoves(board, selectedSquare, possibleTakingMoves);
+                CheckDirectionTakeMoves(board, selectedSquare, possibleTakingMoves);
             }
                                                         
             return possibleTakingMoves;
@@ -56,7 +56,7 @@ namespace CheckersNEA
          * It takes in the current board state, the selected square, and a list to store possible taking moves as parameters.
          ***********************************************************/
 
-        private void checkDirectionTakeMoves(Square[,] board, Square selectedSquare, List<Square> possibleTakingMoves)
+        private void CheckDirectionTakeMoves(Square[,] board, Square selectedSquare, List<Square> possibleTakingMoves)
         {
             if (selectedSquare.Man.IsKing)
             {
@@ -97,15 +97,7 @@ namespace CheckersNEA
                 {
                     return;
                 }
-
-                // This check is to ensure that the target square is not on the same row as the selected square,
-                // as taking moves must be diagonal if the row is only 2 squares away. 
-                /*if (possibleColumn ==  selectedSquare.column &&
-                    (possibleRow == (selectedSquare.row + 2)|| 
-                    (possibleRow == (selectedSquare.row - 2))))
-                {
-                    return;
-                }*/
+                
                 Square targetSquare = board[possibleRow, possibleColumn];
 
                 // No point continuing if the target square is a red square, as pieces cannot move to red squares.
@@ -199,7 +191,7 @@ namespace CheckersNEA
         * It returns true if the move is valid, and false otherwise.
         * TODO. Still in development. Need to add logic to check if the move is a valid diagonal move, and if the piece is a king or not.
         */
-        internal bool CheckIfMoveValid(Square[,] board, Square SelectedSquare, Square targetSquare)
+        internal bool CheckIfMoveValid(Square[,] board, Square SelectedSquare, Square targetSquare, List<TakingSqaureHolder> totalTakingMovesList)
         {
             
             
@@ -209,6 +201,20 @@ namespace CheckersNEA
                 return false;
             }
             
+            if (totalTakingMovesList != null &&
+                totalTakingMovesList.Count > 0)
+            {
+                // If there are taking moves available, the player must take one of them.
+                foreach (TakingSqaureHolder holder in totalTakingMovesList)
+                {
+                    if (holder.getTakingSquares().Contains(targetSquare))
+                    {
+                        return true;
+                    }
+                }
+                return false; // The target square is not a valid taking move.
+            }
+
             if (SelectedSquare.Man.IsKing)
             {
                 // Kings can move in any diagonal direction.
@@ -220,7 +226,7 @@ namespace CheckersNEA
                 {
                     int NewRowNum = targetSquare.row;
                     int SelectedRowNum = SelectedSquare.row;
-                    return  ( (NewRowNum - SelectedRowNum == 1) ? true : false);
+                    return  ((NewRowNum - SelectedRowNum == 1) ? true : false);
                    
                 }
                 else
