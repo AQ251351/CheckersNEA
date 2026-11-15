@@ -23,7 +23,7 @@ namespace CheckersNEA
     {
        //enum to hold possible direction values. direction will be relative to the players view not relative to checkers piece.
         
-        private Square SquareHighlighted = null;
+        private Square SquareSelected = null;
         private bool PlayerOneTurn;        
         List<TakingSqaureHolder> TotalTakingMovesList = null;
 
@@ -71,7 +71,7 @@ namespace CheckersNEA
             {
 
                 // if no piece is currently highlighted 
-                if (SquareHighlighted == null)
+                if (SquareSelected == null)
                 {
                     // We also ensure the current square has a piece in it and that the piece is
                     // the correct colour for the current player.
@@ -79,10 +79,11 @@ namespace CheckersNEA
                         ((currentSquare.Man.IsDarkPiece && PlayerOneTurn) ||
                         (!currentSquare.Man.IsDarkPiece && !PlayerOneTurn)))
                     {
+                        // If there are taking moves available, we need to check if the selected square is one of the squares that can make a taking move.
+                        bool isTakingMoveSquare = false;
                         if (TotalTakingMovesList != null && TotalTakingMovesList.Count > 0)
                         {
-                            // If there are taking moves available, we need to check if the selected square is one of the squares that can make a taking move.
-                            bool isTakingMoveSquare = false;
+                            
                             foreach (TakingSqaureHolder holder in TotalTakingMovesList)
                             {
                                 if (holder.targetSquare == currentSquare)
@@ -97,7 +98,7 @@ namespace CheckersNEA
                                 return UserEventAction.INVALID_SELECTION;
                             }
                         }
-                        SquareHighlighted = CheckAndSelectChosenSquare(currentSquare);
+                        SquareSelected = CheckAndSelectChosenSquare(currentSquare, isTakingMoveSquare);
                         return UserEventAction.SELECTED_PIECE;
                     }
 
@@ -105,7 +106,7 @@ namespace CheckersNEA
                 //if a piece is already selected, we want to move it to the new square
                 //TODO: we will need to add some logic here to check if the move is valid before moving the piece
                     
-                else if (CheckerLogicManager.Instance.CheckIfMoveValid(BoardContainer.Board, SquareHighlighted, currentSquare, TotalTakingMovesList))
+                else if (CheckerLogicManager.Instance.CheckIfMoveValid(BoardContainer.Board, SquareSelected, currentSquare, TotalTakingMovesList))
                 {
                     PieceMove(mouse, currentSquare, TotalTakingMovesList);
                     if (TakingMovePossible())
@@ -183,7 +184,7 @@ namespace CheckersNEA
          * Method: CheckAndSelectChosenSquare
          * Checks the chosen square is valid and then selects it
          ***********************************************************/
-        Square CheckAndSelectChosenSquare (Square currentSquare )
+        Square CheckAndSelectChosenSquare (Square currentSquare, bool isTakingMoveSquare)
         {
             
             //Checks that square chosen has a piece in it.
@@ -193,7 +194,8 @@ namespace CheckersNEA
                 if ((PlayerOneTurn && currentSquare.Man.IsDarkPiece) || 
                     (!PlayerOneTurn && !currentSquare.Man.IsDarkPiece))
                 {
-                    if (CheckerLogicManager.Instance.CheckSelectedPieceCanMove(BoardContainer.Board, currentSquare) == false)
+                    if (! isTakingMoveSquare &&
+                        CheckerLogicManager.Instance.CheckSelectedPieceCanMove(BoardContainer.Board, currentSquare) == false)
                     {
                         return null;
                     }                    
@@ -204,18 +206,18 @@ namespace CheckersNEA
 
                     // saves current square as to be used later when moving the piece. 
                     
-                    SquareHighlighted = currentSquare;
+                    SquareSelected = currentSquare;
 
-                    return SquareHighlighted;
+                    return SquareSelected;
                 }
             }
             return null;
         }
         /************************************************************
-         * Method: ChoosePieceMove
+         * Method: PieceMove
          * 
          * This method is responsible for moving a selected piece to a new square.
-         * It checks if the new square is valid for the move and updates the game state accordingly.
+         * 
          ***********************************************************/
         void PieceMove(MouseState mouse, Square newSquare, List<TakingSqaureHolder> totalTakingMovesList)
         {
@@ -224,15 +226,27 @@ namespace CheckersNEA
             {
                 //as soon as the button is pressed the piece should be moved from the old position to the new position
                 
-                BoardContainer.Board[newSquare.row, newSquare.column].Man =  SquareHighlighted.Man;
+                BoardContainer.Board[newSquare.row, newSquare.column].Man =  SquareSelected.Man;
+
+                if (CheckerLogicManager.Instance.CheckIfPieceShouldBeKinged(BoardContainer.Board, newSquare))
+                {
+                    BoardContainer.Board[newSquare.row, newSquare.column].Man.IsKing = true;
+                }
+
+                // If the move was a taking move, we need to remove the taken piece from the board.
+                if (totalTakingMovesList != null && totalTakingMovesList.Count > 0)
+                {
+                    removePiecesFromBoard(newSquare, totalTakingMovesList);
+                   
+                }
 
                 // Now move piece from the old square.
-                SquareHighlighted.Man = null;
+                SquareSelected.Man = null;
                 
                 // Finally, we want to change the colour of the previous square back to black if it was yellow
-                if (SquareHighlighted.ColourOfSquare == SquareColour.Yellow)
+                if (SquareSelected.ColourOfSquare == SquareColour.Yellow)
                 {
-                    SquareHighlighted.ColourOfSquare = SquareColour.Black;
+                    SquareSelected.ColourOfSquare = SquareColour.Black;
                 }
 
                 if (PlayerOneTurn)
@@ -244,9 +258,58 @@ namespace CheckersNEA
                     PlayerOneTurn = true;
                 }
                 //allows a new square to be selected after the piece has been moved.
-                SquareHighlighted = null;
+                SquareSelected = null;
             }
             
+        }
+
+        /************************************************************
+         * Method: removePiecesFromBoard
+         * 
+         * This method is responsible for removing pieces from the board that have been taken.
+         * It checks if the move was a taking move and removes the taken piece from the board.
+         ***********************************************************/
+        private void removePiecesFromBoard(Square newSquare, List<TakingSqaureHolder> totalTakingMovesList)
+        {
+            foreach (TakingSqaureHolder holder in totalTakingMovesList)
+            {
+                if (holder.targetSquare == SquareSelected)
+                {
+                    foreach (Square takenSquare in holder.getTakingSquares())
+                    {
+                        if (takenSquare == newSquare)
+                        {
+                            // Remove the taken piece from the board.
+
+                            if (BoardContainer.Board[takenSquare.row, takenSquare.column].Man.IsDarkPiece)
+                            {
+                                BoardContainer.PlayerOnePieces--;
+                            }
+                            else
+                            {
+                                BoardContainer.PlayerTwoPieces--;
+                            }
+                            // Remove the piece between the two squares from the board.
+                            removePiecesBetweenTheSquares(SquareSelected, newSquare);
+
+
+                            break;
+                        }
+                    }
+                }
+            }
+           
+        }
+
+        private void removePiecesBetweenTheSquares(Square originalSquare, Square newSquare)
+        {
+            // Calculate the row and column of the square that is between the original square and the new square.
+            // Then remove the piece from that square.
+            int rowBetween = (originalSquare.row + newSquare.row) / 2;
+            int columnBetween = (originalSquare.column + newSquare.column) / 2;
+
+            BoardContainer.Board[rowBetween, columnBetween].Man = null;
+
         }
     }
 }

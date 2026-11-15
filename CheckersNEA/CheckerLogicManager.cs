@@ -243,8 +243,27 @@ namespace CheckersNEA
             return false;
                           
         }
+
+        /*************************************************************
+         * 
+         * 
+         */
+        internal bool CheckIfPieceShouldBeKinged(Square[,] board, Square newSquare)
+        {
+            if (newSquare.Man != null)
+            {
+                // if dark piece and on last row, or if light piece and on first row,
+                // then return true to indicate that the piece should be kinged.
+                if (newSquare.Man.IsDarkPiece && newSquare.row == BoardContainer.BOARD_DIMENSION - 1)
+                {
+                    return true;
+                }
+                else if (!newSquare.Man.IsDarkPiece && newSquare.row == 0)
+                {
+                    return true;
+                }
+            }
+            return false;
+        }
     }   
 }
-// validation to make sure moves are valid, and that the game state is updated correctly after each move.
-// first check if piece is king otherwise it will only be moving in one direction. Then check if the move is a valid diagonal move. 
-// 

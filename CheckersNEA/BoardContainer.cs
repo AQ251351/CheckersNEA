@@ -13,6 +13,8 @@ namespace CheckersNEA
     {
         public const int SQUARE_SIZE = 60;
         public const int BOARD_DIMENSION = 8;
+
+        public const int PLAYER_STARTING_PIECES = 12;
         public const bool DARK_INDICATOR = true;
         public const bool LIGHT_INDICATOR = false;
 
@@ -22,6 +24,8 @@ namespace CheckersNEA
         // which can be null if there is no piece on that square.
         
         public static Square[,] Board { get; set; }
+        public static int PlayerOnePieces { get; internal set; }
+        public static int PlayerTwoPieces { get; internal set; }
 
         /************************************************************
          * Constructor: BoardContainer
@@ -47,7 +51,9 @@ namespace CheckersNEA
             // Creates an 8x8 array to represent the board. Each square is currently null.
             CreateBoard();
             AddPiecesToBoard();
-            
+            PlayerOnePieces = PLAYER_STARTING_PIECES;
+            PlayerTwoPieces = PLAYER_STARTING_PIECES;
+
         }
 
         /************************************************************
